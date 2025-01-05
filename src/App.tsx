@@ -1,24 +1,39 @@
 import React from 'react';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from 'react-router-dom';
+import { useAuthStore } from './store/store';
+import { LoginPage, SignUpPage } from './pages';
 
-function App() {
+const MyPage: React.FC = () => {
+  return <h1>My Page</h1>;
+};
+
+const App: React.FC = () => {
+  const isAuth = useAuthStore((state) => state.isAuth);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={isAuth ? <MyPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/login"
+          element={isAuth ? <Navigate to="/" /> : <LoginPage />}
+        />
+        <Route
+          path="/signUp"
+          element={isAuth ? <Navigate to="/" /> : <SignUpPage />}
+        />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
