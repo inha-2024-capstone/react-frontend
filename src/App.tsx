@@ -6,7 +6,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { useAuthStore } from './store/store';
-import { LoginPage, SignUpPage } from './pages';
+import { LoginPage, SignUpPage, HomePage } from './pages';
 
 const MyPage: React.FC = () => {
   return <h1>My Page</h1>;
@@ -18,9 +18,10 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route
-          path="/"
-          element={isAuth ? <MyPage /> : <Navigate to="/login" />}
+          path="/mypage"
+          element={isAuth ? <MyPage /> : <Navigate to="/" />}
         />
         <Route
           path="/login"
