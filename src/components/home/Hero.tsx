@@ -34,7 +34,6 @@ const HeroContainer = styled.section`
   background-color: #1d1d1d;
   align-self: center;
   border-radius: 12px;
-  margin-top: 1rem;
 `;
 const HeroPicture = styled.picture`
   height: 100%;

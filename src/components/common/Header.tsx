@@ -1,8 +1,10 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { PrevIcon, YogerLogoIcon } from '../../assets/common';
 import styled from 'styled-components';
+import { HomeWhiteIcon } from '../../assets/navMenu';
 
 const Header: React.FC = () => {
+  const productRegex = /^\/product\/([^/]+)$/;
   const location = useLocation();
   const navigate = useNavigate();
   const goBack = () => {
@@ -15,6 +17,15 @@ const Header: React.FC = () => {
         <PrevButton onClick={goBack}>
           <PrevImg src={PrevIcon} alt="뒤로가기" />
         </PrevButton>
+      ) : productRegex.test(location.pathname) ? (
+        <>
+          <IconButton onClick={goBack}>
+            <IconImg src={PrevIcon} alt="이전 페이지" />
+          </IconButton>
+          <IconButton onClick={() => navigate('/')}>
+            <IconImg src={HomeWhiteIcon} alt="홈으로" />
+          </IconButton>
+        </>
       ) : (
         <>
           <HeaderLogo src={YogerLogoIcon} alt="Yoger" />
@@ -30,8 +41,10 @@ export default Header;
 const Container = styled.header`
   display: flex;
   z-index: 100;
-  padding-top: 3rem;
-  padding-left: 1rem;
+  padding: 3rem 1rem 1rem 1rem;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
 `;
 const PrevButton = styled.button`
   background-color: transparent;
@@ -49,4 +62,25 @@ const HeaderLogo = styled.img`
   width: 2rem;
   margin-right: 0.6rem;
   padding-bottom: 0.2rem;
+`;
+const IconButton = styled.button`
+  background-color: transparent;
+  border: none;
+  height: 1.5rem;
+  padding: 0;
+
+  &:first-child {
+    img {
+      height: 1.3rem;
+      padding-top: 0.2rem;
+    }
+  }
+
+  &:last-child {
+    margin-left: auto;
+  }
+`;
+const IconImg = styled.img`
+  height: 1.5rem;
+  width: auto;
 `;
