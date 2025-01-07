@@ -8,6 +8,7 @@ import {
   ShowerProductImg,
   TeaProductImg,
 } from '../../assets/home';
+import { Link } from 'react-router-dom';
 
 const ProductList: React.FC = () => {
   const [divideCount, setDivideCount] = useState<number>(2);
@@ -30,14 +31,16 @@ const ProductList: React.FC = () => {
       <ProductUl $divide={divideCount}>
         {productList.map((product) => (
           <ProductLi key={product.id}>
-            <ProductArticle>
-              <ProductImg src={product.img} alt="상품 이미지" />
-              <ProductDetail>
-                <ProductBrand>{product.brand}</ProductBrand>
-                <ProductName>{product.name}</ProductName>
-                <ProductPrice>{product.price}</ProductPrice>
-              </ProductDetail>
-            </ProductArticle>
+            <Link to={`/product/${product.id}`}>
+              <ProductArticle>
+                <ProductImg src={product.img} alt="상품 이미지" />
+                <ProductDetail>
+                  <ProductBrand>{product.brand}</ProductBrand>
+                  <ProductName>{product.name}</ProductName>
+                  <ProductPrice>{product.price}</ProductPrice>
+                </ProductDetail>
+              </ProductArticle>
+            </Link>
           </ProductLi>
         ))}
       </ProductUl>
@@ -90,6 +93,10 @@ const ProductUl = styled.ul<ProductUlProps>`
 `;
 const ProductLi = styled.li`
   border-radius: 5px;
+
+  a {
+    text-decoration: none;
+  }
 `;
 const ProductArticle = styled.article`
   //   height: 17rem;
