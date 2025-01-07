@@ -6,7 +6,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { useAuthStore } from './store/store';
-import { LoginPage, SignUpPage, HomePage } from './pages';
+import { LoginPage, SignUpPage, HomePage, ProductPage } from './pages';
 
 const MyPage: React.FC = () => {
   return <h1>My Page</h1>;
@@ -31,6 +31,7 @@ const App: React.FC = () => {
           path="/signUp"
           element={isAuth ? <Navigate to="/" /> : <SignUpPage />}
         />
+        <Route path="/product/:id" element={<ProductPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
