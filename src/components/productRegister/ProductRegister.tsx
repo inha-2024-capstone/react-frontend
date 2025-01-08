@@ -214,6 +214,8 @@ const FileInputText = styled.p`
 // 등록하기 버튼
 const RegisterButton = styled.button`
   width: 100%;
+  min-width: 320px;
+  max-width: 600px;
   position: fixed;
   bottom: 0;
   padding: 1rem;
