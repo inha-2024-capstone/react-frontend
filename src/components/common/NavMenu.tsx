@@ -5,6 +5,8 @@ import {
   HomeWhiteIcon,
   MyNavyIcon,
   MyWhiteIcon,
+  RegisterNavyIcon,
+  RegisterWhiteIcon,
 } from '../../assets/navMenu';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/store';
@@ -42,6 +44,12 @@ const NavMenu: React.FC = () => {
 export default NavMenu;
 
 const navList = [
+  {
+    title: '상품 등록',
+    url: '/product/register',
+    activeIcon: RegisterNavyIcon,
+    inactiveIcon: RegisterWhiteIcon,
+  },
   {
     title: '요거 홈',
     url: '/',
@@ -98,7 +106,9 @@ const NavUl = styled.ul`
 `;
 const NavLi = styled.li<NavLiProps>`
   display: flex;
+  flex-direction: column;
   align-items: center;
+  width: 3rem;
 
   a {
     display: flex;
