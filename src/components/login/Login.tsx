@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuthStore } from '../../store/store';
+import { useAuthStore, useUserTypeStore } from '../../store/store';
 import {
   GoogleCircleImg,
   KakaoCircleImg,
@@ -20,6 +20,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    useUserTypeStore.getState().setUserType(userType);
     UserService.signIn(inputEmail, inputPassword).then((response) => {
       if (response.isSucceeded === false) {
         alert('로그인에 실패했습니다.');
