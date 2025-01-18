@@ -33,6 +33,10 @@ const Login: React.FC = () => {
     });
   };
 
+  const handleOAuthLogin = (loginSource: string) => {
+    window.location.href = `${process.env.REACT_APP_SERVER_URL}oauth2/authorization/${loginSource}?redirect_uri=http://localhost:3000/oauth2/redirect&mode=login`;
+  };
+
   return (
     <Container>
       {/* 로그인 타이틀 */}
@@ -96,13 +100,25 @@ const Login: React.FC = () => {
           <QuickLoginHr></QuickLoginHr>
         </QuickLoginTitle>
         <QuickLoginButton>
-          <QuickLoginImg src={GoogleCircleImg} alt="구글 로그인" />
+          <QuickLoginImg
+            src={GoogleCircleImg}
+            onClick={() => handleOAuthLogin('google')}
+            alt="구글 로그인"
+          />
         </QuickLoginButton>
         <QuickLoginButton>
-          <QuickLoginImg src={KakaoCircleImg} alt="카카오 로그인" />
+          <QuickLoginImg
+            src={KakaoCircleImg}
+            onClick={() => handleOAuthLogin('kakao')}
+            alt="카카오 로그인"
+          />
         </QuickLoginButton>
         <QuickLoginButton>
-          <QuickLoginImg src={NaverCircleImg} alt="네이버 로그인" />
+          <QuickLoginImg
+            src={NaverCircleImg}
+            onClick={() => handleOAuthLogin('naver')}
+            alt="네이버 로그인"
+          />
         </QuickLoginButton>
       </QuickLogin>
     </Container>

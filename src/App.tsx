@@ -7,8 +7,14 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { useAuthStore } from './store/store';
-import { LoginPage, SignUpPage, HomePage, ProductPage } from './pages';
-import ProductRegisterPage from './pages/ProductRegisterPage';
+import {
+  LoginPage,
+  SignUpPage,
+  HomePage,
+  ProductPage,
+  OAuthRedirectPage,
+  ProductRegisterPage,
+} from './pages';
 import UserService from './services/UserService';
 
 const MyPage: React.FC = () => {
@@ -53,6 +59,7 @@ const App: React.FC = () => {
           path="/login"
           element={isAuth ? <Navigate to="/" /> : <LoginPage />}
         />
+        <Route path="/oauth2/redirect" element={<OAuthRedirectPage />} />
         <Route
           path="/signUp"
           element={isAuth ? <Navigate to="/" /> : <SignUpPage />}

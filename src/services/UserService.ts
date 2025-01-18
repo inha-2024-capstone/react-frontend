@@ -104,19 +104,6 @@ class UserService {
     return response.data;
   }
 
-  // OAuth2.0 로그인
-  public static async OAuth2Login(
-    client_name: string,
-  ): Promise<OAuthLoginResponse> {
-    const FRONT_DOMAIN = 'localhost';
-    const response = await axiosInstance.get<OAuthLoginResponse>(
-      `/oauth2/authorization/${client_name}?redirect_uri=https://${FRONT_DOMAIN}:3000&mode=login`,
-    );
-    console.log('response oauth: ', response);
-
-    return response.data;
-  }
-
   // 리프레시 토큰 재발급
   public static async refreshToken(): Promise<SignInResponse> {
     const response = await axiosInstance.get<SignInResponse>(
