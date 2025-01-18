@@ -4,6 +4,7 @@ import useDocumentTitle from '../../hooks/useDocumentTitle';
 import ProductService from '../../services/ProductService';
 import usePriceFormatter from '../../hooks/usePriceFormatter';
 import { ProductDetailType } from '../../types/productTypes';
+import { RecImg } from '../../assets/common';
 import styled from 'styled-components';
 
 const Product: React.FC = () => {
@@ -42,7 +43,7 @@ const Product: React.FC = () => {
 
         {/* 제품 정보 */}
         <ProductInfo>
-          <ProductImg src={productInfo.imageUrl} alt="상품 이미지" />
+          <ProductImg src={productInfo.imageUrl || RecImg} alt="상품 이미지" />
           <ProductBrand>{productInfo.creatorName}</ProductBrand>
           <ProductName>{productInfo.name}</ProductName>
           <ProductPrice>
