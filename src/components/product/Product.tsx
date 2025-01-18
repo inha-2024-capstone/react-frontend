@@ -1,14 +1,37 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
-import { TeaProductImg } from '../../assets/home';
+import ProductService from '../../services/ProductService';
+import usePriceFormatter from '../../hooks/usePriceFormatter';
+import { ProductDetailType } from '../../types/productTypes';
+import { RecImg } from '../../assets/common';
 import styled from 'styled-components';
 
 const Product: React.FC = () => {
+  const [productInfo, setProductInfo] = useState<ProductDetailType>({
+    id: 0,
+    name: '',
+    priceByQuantities: [],
+    description: '',
+    imageUrl: '',
+    state: '',
+    creatorId: 0,
+    creatorName: '',
+    dueDate: '',
+    soldQuantity: 0,
+  });
+  const priceFormatter = usePriceFormatter();
   const { id } = useParams<{ id: string }>(); // id를 가져옴
   const name = `Product ${id}`;
   const brand = `Brand ${id}`;
 
   useDocumentTitle(`${name} - ${brand} | Yoger`);
+
+  useEffect(() => {
+    ProductService.getProduct(id ? id : '0').then((response) => {
+      setProductInfo(response);
+    });
+  }, [id]);
 
   return (
     <ProductContainer>
@@ -20,10 +43,12 @@ const Product: React.FC = () => {
 
         {/* 제품 정보 */}
         <ProductInfo>
-          <ProductImg src={productInfo.img} alt="상품 이미지" />
-          <ProductBrand>{productInfo.brand}</ProductBrand>
+          <ProductImg src={productInfo.imageUrl || RecImg} alt="상품 이미지" />
+          <ProductBrand>{productInfo.creatorName}</ProductBrand>
           <ProductName>{productInfo.name}</ProductName>
-          <ProductPrice>{productInfo.price}</ProductPrice>
+          <ProductPrice>
+            {priceFormatter(productInfo.priceByQuantities[0]?.price || 0)} 원
+          </ProductPrice>
         </ProductInfo>
 
         {/* 구분선 역할 */}
@@ -33,7 +58,7 @@ const Product: React.FC = () => {
         <ProductDetail>
           <DetailTitle>상품 상세 설명</DetailTitle>
           <DetailDesc>
-            {productInfo.detail.split('\n').map((line, index) => (
+            {productInfo.description.split('\n').map((line, index) => (
               <span key={index}>
                 {line}
                 <br />
@@ -53,16 +78,6 @@ const Product: React.FC = () => {
 };
 
 export default Product;
-
-const productInfo = {
-  id: '1',
-  name: '스페셜 찻잔',
-  brand: '차마시기',
-  price: '가격 미정',
-  img: TeaProductImg,
-  detail:
-    '특수 소재 찻잔으로 보온성을 강화시켰습니다.\n차를 마실 때 더욱 특별한 시간을 보내세요. \n\n찻잔 사이즈: 100ml\n찻잔 소재: 특수 소재\n찻잔 색상: 블랙, 화이트\n찻잔 무게: 100g\n찻잔 크기: 10cm x 10cm x 5cm',
-};
 
 const ProductContainer = styled.main`
   flex: 1;
