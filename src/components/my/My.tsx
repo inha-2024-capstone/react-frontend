@@ -10,7 +10,7 @@ import { MyWhiteIcon } from '../../assets/navMenu';
 
 const My: React.FC = () => {
   const [userType, setUserType] = useState<string>(
-    useUserInfoStore.getState().nickName,
+    useUserTypeStore.getState().userType,
   );
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
