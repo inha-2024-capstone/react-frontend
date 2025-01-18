@@ -19,3 +19,29 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () =>
     set({ isAuth: false, accessToken: undefined, refreshToken: undefined }),
 }));
+
+// 유저 정보
+type UserInfo = {
+  address: string;
+  email: string;
+  gender: string;
+  imageUri: string;
+  nickName: string;
+  phoneNumber: string;
+  username: string;
+};
+
+type UserInfoState = UserInfo & {
+  setUserInfo: (userInfo: UserInfo) => void;
+};
+
+export const useUserInfoStore = create<UserInfoState>((set) => ({
+  address: '',
+  email: '',
+  gender: '',
+  imageUri: '',
+  nickName: '',
+  phoneNumber: '',
+  username: '',
+  setUserInfo: (userInfo: UserInfo) => set(userInfo),
+}));
