@@ -23,6 +23,7 @@ const InputItem: React.FC<InputItemProps> = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        required
       />
     </SignUpLabel>
   );
