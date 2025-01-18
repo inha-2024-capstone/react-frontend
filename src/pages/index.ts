@@ -4,3 +4,4 @@ export { default as HomePage } from './HomePage';
 export { default as ProductPage } from './ProductPage';
 export { default as ProductRegisterPage } from './ProductRegisterPage';
 export { default as OAuthRedirectPage } from './OAuthRedirectPage';
+export { default as MyPage } from './MyPage';
