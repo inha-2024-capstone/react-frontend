@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import {
-  DivideThreeIcon,
-  DivideTwoIcon,
-  LifeProductImg,
-  ShirtProductImg,
-  ShowerProductImg,
-  TeaProductImg,
-} from '../../assets/home';
+import React, { useEffect, useState } from 'react';
+import { DivideThreeIcon, DivideTwoIcon } from '../../assets/home';
 import { Link } from 'react-router-dom';
+import ProductService from '../../services/ProductService';
+import usePriceFormatter from '../../hooks/usePriceFormatter';
+import { ProductListType } from '../../types/productTypes';
+import styled from 'styled-components';
 
 const ProductList: React.FC = () => {
   const [divideCount, setDivideCount] = useState<number>(2);
+  const [productList, setProductList] = useState<ProductListType[]>([]);
+  const priceFormatter = usePriceFormatter();
+
+  useEffect(() => {
+    ProductService.getProducts().then((response) => {
+      setProductList(response);
+    });
+  }, []);
 
   return (
     <Container>
@@ -33,11 +37,13 @@ const ProductList: React.FC = () => {
           <ProductLi key={product.id}>
             <Link to={`/product/${product.id}`}>
               <ProductArticle>
-                <ProductImg src={product.img} alt="상품 이미지" />
+                <ProductImg src={product.thumbnailImageUrl} alt="상품 이미지" />
                 <ProductDetail>
-                  <ProductBrand>{product.brand}</ProductBrand>
+                  <ProductBrand>{product.creatorName}</ProductBrand>
                   <ProductName>{product.name}</ProductName>
-                  <ProductPrice>{product.price}</ProductPrice>
+                  <ProductPrice>
+                    {priceFormatter(product.priceByQuantities[0].price)} 원
+                  </ProductPrice>
                 </ProductDetail>
               </ProductArticle>
             </Link>
@@ -136,69 +142,3 @@ const ProductDetail = styled.div`
   padding: 0 0.2rem;
   height: 6rem;
 `;
-
-const productList = [
-  {
-    id: 1,
-    brand: '차마시기',
-    name: '스페셜 찻잔',
-    price: '가격 미정',
-    img: TeaProductImg,
-  },
-  {
-    id: 2,
-    brand: '셀프산타',
-    name: '라이프 셀프 패키지 (오리지널 프리미엄 라인)',
-    price: '가격 미정',
-    img: LifeProductImg,
-  },
-  {
-    id: 3,
-    brand: '휴먼워셔',
-    name: '목욕 패키지',
-    price: '가격 미정',
-    img: ShowerProductImg,
-  },
-  {
-    id: 4,
-    brand: '김기정',
-    name: '괴물쥐 티셔츠 3종 세트',
-    price: '가격 미정',
-    img: ShirtProductImg,
-  },
-  {
-    id: 5,
-    brand: '차마시기',
-    name: '스페셜 찻잔',
-    price: '가격 미정',
-    img: TeaProductImg,
-  },
-  {
-    id: 6,
-    brand: '셀프산타',
-    name: '라이프 셀프 패키지',
-    price: '가격 미정',
-    img: LifeProductImg,
-  },
-  {
-    id: 7,
-    brand: '휴먼워셔',
-    name: '목욕 패키지',
-    price: '가격 미정',
-    img: ShowerProductImg,
-  },
-  {
-    id: 8,
-    brand: '김기정',
-    name: '괴물쥐 티셔츠 3종 세트',
-    price: '가격 미정',
-    img: ShirtProductImg,
-  },
-  {
-    id: 9,
-    brand: '차마시기',
-    name: '스페셜 찻잔',
-    price: '가격 미정',
-    img: TeaProductImg,
-  },
-];
