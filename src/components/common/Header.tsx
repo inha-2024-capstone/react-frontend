@@ -5,7 +5,11 @@ import { HomeWhiteIcon } from '../../assets/navMenu';
 import { MdOutlineLogout } from 'react-icons/md';
 import { RiEdit2Fill } from 'react-icons/ri';
 import UserService from '../../services/UserService';
-import { useAuthStore } from '../../store/store';
+import {
+  useAuthStore,
+  useCompanyInfoStore,
+  useUserInfoStore,
+} from '../../store/store';
 
 const Header: React.FC = () => {
   const productRegex = /^\/product\/([^/]+)$/;
@@ -25,6 +29,8 @@ const Header: React.FC = () => {
       localStorage.removeItem('yogerAccessToken');
       localStorage.removeItem('yogerRefreshToken');
       useAuthStore.getState().logout();
+      useUserInfoStore.getState().logout();
+      useCompanyInfoStore.getState().logout();
       navigate('/');
     });
   };
