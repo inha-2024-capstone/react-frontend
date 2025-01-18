@@ -18,7 +18,28 @@ import {
 import UserService from './services/UserService';
 
 const MyPage: React.FC = () => {
-  return <h1>My Page</h1>;
+  const navigate = useNavigate();
+
+  const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    UserService.logout().then((response) => {
+      if (response.isSucceeded === false) {
+        alert('로그아웃에 실패했습니다.');
+        return;
+      }
+      localStorage.removeItem('yogerAccessToken');
+      localStorage.removeItem('yogerRefreshToken');
+      useAuthStore.getState().logout();
+      navigate('/');
+    });
+  };
+
+  return (
+    <main>
+      <h1>My Page</h1>
+      <button onClick={(e) => handleLogout(e)}>Logout</button>
+    </main>
+  );
 };
 
 const App: React.FC = () => {
