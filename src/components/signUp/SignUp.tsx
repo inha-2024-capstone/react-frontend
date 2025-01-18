@@ -4,6 +4,8 @@ import InputItem from '../common/InputItem';
 import styled from 'styled-components';
 import { YogerLogoIcon } from '../../assets/common';
 import UserService from '../../services/UserService';
+import ModalComponent from '../common/ModalComponent';
+import ZipCodeSearch from './ZipCodeSearch';
 
 interface SignUpFormData {
   email: string;
@@ -20,6 +22,7 @@ interface SignUpFormData {
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [userType, setUserType] = useState<string>('user');
   const [gender, setGender] = useState<string | null>('남자');
   const [formData, setFormData] = useState<SignUpFormData>({
@@ -37,6 +40,11 @@ const SignUp: React.FC = () => {
 
   const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGender(e.target.value);
+  };
+
+  const handelSearchZipcode = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setModalOpen(true);
   };
 
   const getSignUpData = (): FormData => {
@@ -215,7 +223,20 @@ const SignUp: React.FC = () => {
                     })
                   }
                 />
-                <ZipcodeSearchButton>우편번호 검색</ZipcodeSearchButton>
+                <ZipcodeSearchButton onClick={(e) => handelSearchZipcode(e)}>
+                  우편번호 검색
+                </ZipcodeSearchButton>
+                <ModalComponent
+                  isOpen={modalOpen}
+                  setIsOpen={setModalOpen}
+                  contentLabel="우편번호 검색"
+                >
+                  <ZipCodeSearch
+                    setFormData={setFormData}
+                    formData={formData}
+                    setModalOpen={setModalOpen}
+                  />
+                </ModalComponent>
               </ZipcodeContainer>
             ) : (
               <InputItem
