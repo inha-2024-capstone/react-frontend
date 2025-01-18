@@ -12,6 +12,8 @@ const OAuthRedirectPage: React.FC = () => {
   const accessToken: string = url.searchParams.get('Access-Token') || '';
   const refreshToken: string = url.searchParams.get('Refresh-Token') || '';
   if (accessToken && refreshToken) {
+    localStorage.setItem('yogerAccessToken', accessToken);
+    localStorage.setItem('yogerRefreshToken', refreshToken);
     useAuthStore.getState().login(accessToken, refreshToken);
     navigate('/');
   } else {

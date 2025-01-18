@@ -29,3 +29,27 @@ export interface LogoutResponse extends Response {
 export interface OAuthLoginResponse {
   redirectedURL: string;
 }
+
+export interface AuthInfoResponse extends Response {
+  result: {
+    address: string;
+    email: string;
+    gender: string;
+    imageUri: string;
+    nickName: string;
+    phoneNumber: string;
+    username: string;
+  };
+}
+
+export interface CompanyAuthInfoResponse extends Response {
+  result: {
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    description: string;
+    shortDescription: string;
+    imageUrl: string;
+  };
+}

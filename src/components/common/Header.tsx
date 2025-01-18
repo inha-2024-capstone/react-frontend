@@ -2,6 +2,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { PrevIcon, YogerLogoIcon } from '../../assets/common';
 import styled from 'styled-components';
 import { HomeWhiteIcon } from '../../assets/navMenu';
+import { MdOutlineLogout } from 'react-icons/md';
+import { RiEdit2Fill } from 'react-icons/ri';
+import UserService from '../../services/UserService';
+import {
+  useAuthStore,
+  useCompanyInfoStore,
+  useUserInfoStore,
+} from '../../store/store';
 
 const Header: React.FC = () => {
   const productRegex = /^\/product\/([^/]+)$/;
@@ -9,6 +17,22 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
+  };
+
+  const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    UserService.logout().then((response) => {
+      if (response.isSucceeded === false) {
+        alert('로그아웃에 실패했습니다.');
+        return;
+      }
+      localStorage.removeItem('yogerAccessToken');
+      localStorage.removeItem('yogerRefreshToken');
+      useAuthStore.getState().logout();
+      useUserInfoStore.getState().logout();
+      useCompanyInfoStore.getState().logout();
+      navigate('/');
+    });
   };
 
   return (
@@ -25,6 +49,19 @@ const Header: React.FC = () => {
           <IconButton onClick={() => navigate('/')}>
             <IconImg src={HomeWhiteIcon} alt="홈으로" />
           </IconButton>
+        </>
+      ) : location.pathname === '/mypage' ? (
+        <>
+          <HeaderLogo src={YogerLogoIcon} alt="Yoger" />
+          <Title>My</Title>
+          <IconButtons>
+            <IconBtn>
+              <RiEdit2Fill color="#2C3E50" />
+            </IconBtn>
+            <IconBtn onClick={(e) => handleLogout(e)}>
+              <MdOutlineLogout color="#2C3E50" />
+            </IconBtn>
+          </IconButtons>
         </>
       ) : (
         <>
@@ -83,4 +120,18 @@ const IconButton = styled.button`
 const IconImg = styled.img`
   height: 1.5rem;
   width: auto;
+`;
+const IconButtons = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+`;
+const IconBtn = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 1.6rem;
+  margin: 0;
+  padding: 0;
+  margin-left: 1.2rem;
+  display: flex;
 `;
