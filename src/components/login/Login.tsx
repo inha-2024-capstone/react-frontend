@@ -8,6 +8,7 @@ import {
 } from '../../assets/login';
 import { YogerLogoIcon } from '../../assets/common';
 import styled from 'styled-components';
+import UserService from '../../services/UserService';
 
 const Login: React.FC = () => {
   const [userType, setUserType] = useState<string>('user');
@@ -19,8 +20,17 @@ const Login: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    login();
-    navigate('/');
+    UserService.signIn(inputEmail, inputPassword).then((response) => {
+      if (response.isSucceeded === false) {
+        alert('로그인에 실패했습니다.');
+        return;
+      }
+
+      localStorage.setItem('yogerAccessToken', response.accessToken);
+      localStorage.setItem('yogerRefreshToken', response.refreshToken);
+      login(response.accessToken, response.refreshToken);
+      navigate('/');
+    });
   };
 
   return (
