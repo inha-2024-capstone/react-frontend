@@ -58,7 +58,23 @@ class UserService {
       },
     );
 
-    console.log('response signUp : ', response);
+    return response.data;
+  }
+
+  // 기업 회원가입
+  public static async companySignUp(data: FormData): Promise<SignUpResponse> {
+    const response = await axiosInstance.post<SignUpResponse>(
+      '/api/company/sign-up',
+      {
+        companyName: data.get('companyName'),
+        email: data.get('email'),
+        password: data.get('password'),
+        phoneNumber: data.get('phoneNumber'),
+        address: data.get('address'),
+        shortDescription: data.get('shortDescription'),
+        description: data.get('description'),
+      },
+    );
 
     return response.data;
   }

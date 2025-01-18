@@ -80,12 +80,10 @@ const SignUp: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data: FormData = getSignUpData();
-    console.log('sign up');
 
     // 닉네임 중복 확인
     UserService.checkNickname(formData.nickName)
       .then((response) => {
-        console.log('닉네임 : ', response);
         if (response.isSucceeded) {
           alert('이미 존재하는 닉네임입니다.');
           return;
@@ -94,35 +92,44 @@ const SignUp: React.FC = () => {
         // 이메일 중복 확인
         UserService.checkNickname(formData.nickName)
           .then((response) => {
-            console.log('이메일 : ', response);
             if (response.isSucceeded) {
               alert('이미 존재하는 닉네임입니다.');
               return;
             }
 
-            console.log('회원가입 데이터 : ', data);
-            console.log({ ...data });
-
             // 회원가입
-            UserService.signUp(data)
-              .then((response) => {
-                console.log(response);
-                if (response.isSucceeded) {
-                  navigate('/login');
-                } else {
-                  alert(response.message);
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              });
+            if (userType === 'user') {
+              UserService.signUp(data)
+                .then((response) => {
+                  if (response.isSucceeded) {
+                    navigate('/login');
+                  } else {
+                    alert(response.message);
+                  }
+                })
+                .catch((error) => {
+                  console.error('user signIn error: ', error);
+                });
+            } else {
+              UserService.companySignUp(data)
+                .then((response) => {
+                  if (response.isSucceeded) {
+                    navigate('/login');
+                  } else {
+                    alert(response.message);
+                  }
+                })
+                .catch((error) => {
+                  console.error('company signIn error: ', error);
+                });
+            }
           })
           .catch((error) => {
-            console.error(error);
+            console.error('check email error: ', error);
           });
       })
       .catch((error) => {
-        console.error(error);
+        console.error('check nickname error: ', error);
       });
   };
 
