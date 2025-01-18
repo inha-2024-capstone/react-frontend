@@ -41,3 +41,15 @@ export interface AuthInfoResponse extends Response {
     username: string;
   };
 }
+
+export interface CompanyAuthInfoResponse extends Response {
+  result: {
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    description: string;
+    shortDescription: string;
+    imageUrl: string;
+  };
+}

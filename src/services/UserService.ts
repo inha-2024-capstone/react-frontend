@@ -3,9 +3,9 @@ import {
   CheckEmailResponse,
   CheckNicknameResponse,
   LogoutResponse,
-  OAuthLoginResponse,
   SignInResponse,
   SignUpResponse,
+  CompanyAuthInfoResponse,
 } from '../types/signUpTypes';
 import { axiosInstance } from '../utils/axios';
 
@@ -146,6 +146,20 @@ class UserService {
   public static async getAuthInfo(): Promise<AuthInfoResponse> {
     const response = await axiosInstance.get<AuthInfoResponse>(
       '/api/user/auth-info',
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('yogerAccessToken')}`,
+        },
+      },
+    );
+
+    return response.data;
+  }
+
+  // 기업 정보 가져오기
+  public static async getCompanyAuthInfo(): Promise<CompanyAuthInfoResponse> {
+    const response = await axiosInstance.get<CompanyAuthInfoResponse>(
+      '/api/company/auth-info',
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('yogerAccessToken')}`,
