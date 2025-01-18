@@ -47,4 +47,6 @@ const ZipCodeSearch: React.FC<ZipCodeSearchProps> = ({
 export default ZipCodeSearch;
 
 const ZipCodeSection = styled.section``;
-const ZipCodeTitle = styled.h3``;
+const ZipCodeTitle = styled.h3`
+  padding-top: 0.2rem;
+`;

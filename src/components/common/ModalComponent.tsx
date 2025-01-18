@@ -42,7 +42,7 @@ const customStyles = {
     width: '80%',
     maxWidth: '480px',
     height: 'max-content',
-    maxHeight: '80%',
+    maxHeight: '90%',
     padding: 0,
     margin: 'auto',
     backgroundColor: 'white',
