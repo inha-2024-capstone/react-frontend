@@ -33,6 +33,7 @@ type UserInfo = {
 
 type UserInfoState = UserInfo & {
   setUserInfo: (userInfo: UserInfo) => void;
+  logout: () => void;
 };
 
 export const useUserInfoStore = create<UserInfoState>((set) => ({
@@ -44,4 +45,62 @@ export const useUserInfoStore = create<UserInfoState>((set) => ({
   phoneNumber: '',
   username: '',
   setUserInfo: (userInfo: UserInfo) => set(userInfo),
+  logout: () =>
+    set({
+      address: '',
+      email: '',
+      gender: '',
+      imageUri: '',
+      nickName: '',
+      phoneNumber: '',
+      username: '',
+    }),
+}));
+
+// 사용자 유형
+type UserType = {
+  userType: string;
+  setUserType: (userType: string) => void;
+};
+
+export const useUserTypeStore = create<UserType>((set) => ({
+  userType: 'user',
+  setUserType: (userType: string) => set({ userType }),
+}));
+
+// 회사 정보
+type CompanyInfo = {
+  companyName: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  description: string;
+  shortDescription: string;
+  imageUrl: string;
+};
+
+type CompanyInfoState = CompanyInfo & {
+  setCompanyInfo: (companyInfo: CompanyInfo) => void;
+  logout: () => void;
+};
+
+export const useCompanyInfoStore = create<CompanyInfoState>((set) => ({
+  companyName: '',
+  email: '',
+  phoneNumber: '',
+  address: '',
+  description: '',
+  shortDescription: '',
+  imageUrl: '',
+  setCompanyInfo: (companyInfo: CompanyInfo) => set(companyInfo),
+  logout: () =>
+    set({
+      companyName: '',
+      email: '',
+      phoneNumber: '',
+      address: '',
+      description: '',
+      shortDescription: '',
+      imageUrl: '',
+    }),
 }));
