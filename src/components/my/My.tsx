@@ -1,27 +1,59 @@
-import { useNavigate } from 'react-router-dom';
 import UserService from '../../services/UserService';
-import { useAuthStore, useUserInfoStore } from '../../store/store';
+import {
+  useCompanyInfoStore,
+  useUserInfoStore,
+  useUserTypeStore,
+} from '../../store/store';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import { MyWhiteIcon } from '../../assets/navMenu';
 
 const My: React.FC = () => {
-  const navigate = useNavigate();
+  const [userType, setUserType] = useState<string>(
+    useUserInfoStore.getState().nickName,
+  );
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    if (useUserInfoStore.getState().nickName === '') {
+    if (
+      useUserInfoStore.getState().nickName === '' &&
+      useCompanyInfoStore.getState().companyName === ''
+    ) {
       setIsLoaded(true);
-      UserService.getAuthInfo().then((response) => {
-        if (response.isSucceeded === false) {
-          alert('유저 정보를 가져오는데 실패했습니다.');
-          return;
-        }
-        console.log('auth info', response);
-        useUserInfoStore.getState().setUserInfo(response.result);
-        setIsLoaded(false);
-      });
+
+      if (useUserTypeStore.getState().userType === 'user') {
+        UserService.getAuthInfo()
+          .then((response) => {
+            if (response.isSucceeded === false) {
+              alert('유저 정보를 가져오는데 실패했습니다.');
+              return;
+            }
+            console.log('auth info', response);
+            useUserInfoStore.getState().setUserInfo(response.result);
+            setIsLoaded(false);
+          })
+          .catch((error) => {
+            useUserTypeStore.getState().setUserType('company');
+            setUserType('company');
+          });
+      } else {
+        UserService.getCompanyAuthInfo()
+          .then((response) => {
+            if (response.isSucceeded === false) {
+              alert('유저 정보를 가져오는데 실패했습니다.');
+              return;
+            }
+            console.log('company auth info', response);
+            useCompanyInfoStore.getState().setCompanyInfo(response.result);
+            setIsLoaded(false);
+          })
+          .catch((error) => {
+            useUserTypeStore.getState().setUserType('user');
+            setUserType('user');
+          });
+      }
     }
-  }, []);
+  }, [userType]);
 
   return (
     <>
@@ -33,38 +65,93 @@ const My: React.FC = () => {
       ) : (
         <MyMain>
           <MyTitle>My Page</MyTitle>
+          {/* 사용자 정보 */}
           <MainBackground>
             <MainSection>
               <MyTitle>My Info</MyTitle>
-              <MyImg src={useUserInfoStore.getState().imageUri} alt="profile" />
+              <MyImg
+                src={
+                  (
+                    userType === 'user'
+                      ? useUserInfoStore.getState().imageUri
+                      : useCompanyInfoStore.getState().imageUrl
+                  )
+                    ? userType === 'user'
+                      ? useUserInfoStore.getState().imageUri
+                      : useCompanyInfoStore.getState().imageUrl
+                    : MyWhiteIcon
+                }
+                alt="profile"
+              />
 
               <MainInfo>
-                <MyNickname>{useUserInfoStore.getState().nickName}</MyNickname>
-                <MyEmail>Email : {useUserInfoStore.getState().email}</MyEmail>
+                <MyNickname>
+                  {userType === 'user'
+                    ? useUserInfoStore.getState().nickName
+                    : useCompanyInfoStore.getState().companyName}
+                </MyNickname>
+                <MyEmail>
+                  Email :{' '}
+                  {
+                    (userType === 'user'
+                      ? useUserInfoStore
+                      : useCompanyInfoStore
+                    ).getState().email
+                  }
+                </MyEmail>
               </MainInfo>
             </MainSection>
           </MainBackground>
 
+          {/* 사용자 상세 정보 */}
           <UserDetail>
             <UserDetailTitle>세부 정보</UserDetailTitle>
-            <DetailItem
-              title="이름"
-              content={useUserInfoStore.getState().username}
-            />
+            {userType === 'user' && (
+              <>
+                <DetailItem
+                  title="이름"
+                  content={useUserInfoStore.getState().username}
+                />
+                <DetailItem
+                  title="성별"
+                  content={
+                    useUserInfoStore.getState().gender == 'MALE'
+                      ? '남자'
+                      : '여자'
+                  }
+                />
+              </>
+            )}
             <DetailItem
               title="전화번호"
-              content={useUserInfoStore.getState().phoneNumber}
-            />
-            <DetailItem
-              title="성별"
               content={
-                useUserInfoStore.getState().gender == 'MALE' ? '남자' : '여자'
+                (userType === 'user'
+                  ? useUserInfoStore
+                  : useCompanyInfoStore
+                ).getState().phoneNumber
               }
             />
             <DetailItem
               title="주소"
-              content={useUserInfoStore.getState().address}
+              content={
+                (userType === 'user'
+                  ? useUserInfoStore
+                  : useCompanyInfoStore
+                ).getState().address
+              }
             />
+            {userType === 'company' && (
+              <>
+                <DetailItem
+                  title="회사 소개"
+                  content={useCompanyInfoStore.getState().shortDescription}
+                />
+                <DetailItem
+                  title="상세 회사 소개"
+                  content={useCompanyInfoStore.getState().description}
+                />
+              </>
+            )}
           </UserDetail>
         </MyMain>
       )}
@@ -89,7 +176,6 @@ const DetailItem: React.FC<{ title: string; content: string }> = ({
 const MyMain = styled.main`
   display: flex;
   flex-direction: column;
-  align-items: center;
   flex: 1;
   min-height: calc(100vh - 14rem);
 `;
@@ -134,15 +220,18 @@ const UserDetailTitle = styled.h3`
 const UserDetailItem = styled.div`
   display: flex;
   align-items: center;
+  margin: 1rem 0;
 `;
 const UserDetailItemTitle = styled.h4`
   margin: 0;
-  width: 5rem;
+  width: 7rem;
   font-size: 0.9rem;
 `;
 const UserDetailItemContent = styled.p`
   flex: 1;
   font-size: 0.9rem;
+  padding: 0;
+  margin: 0;
 `;
 // 로딩 화면
 const LoadingSection = styled.section`
