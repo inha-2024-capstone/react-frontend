@@ -3,13 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import InputItem from '../common/InputItem';
 import styled from 'styled-components';
 import { YogerLogoIcon } from '../../assets/common';
+import UserService from '../../services/UserService';
+import ModalComponent from '../common/ModalComponent';
+import ZipCodeSearch from './ZipCodeSearch';
 
-interface FormData {
+interface SignUpFormData {
   email: string;
   name: string;
-  nickname: string;
+  nickName: string;
   password: string;
-  phone: string;
+  phoneNumber: string;
   zipcode: string;
   address: string;
   detailAddress: string;
@@ -19,14 +22,15 @@ interface FormData {
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [userType, setUserType] = useState<string>('user');
   const [gender, setGender] = useState<string | null>('남자');
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<SignUpFormData>({
     email: '',
     name: '',
-    nickname: '',
+    nickName: '',
     password: '',
-    phone: '',
+    phoneNumber: '',
     zipcode: '',
     address: '',
     detailAddress: '',
@@ -38,11 +42,103 @@ const SignUp: React.FC = () => {
     setGender(e.target.value);
   };
 
+  const handelSearchZipcode = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setModalOpen(true);
+  };
+
+  const getSignUpData = (): FormData => {
+    const signUpFormData = new FormData();
+
+    if (userType === 'user') {
+      // user
+      signUpFormData.append('email', formData.email ? formData.email : '');
+      signUpFormData.append('username', formData.name);
+      signUpFormData.append('password', formData.password);
+      signUpFormData.append('role', 'USER');
+      signUpFormData.append('gender', gender === '남자' ? 'MALE' : 'FEMALE');
+      signUpFormData.append('phoneNumber', formData.phoneNumber);
+      signUpFormData.append(
+        'address',
+        formData.zipcode + formData.address + formData.detailAddress,
+      );
+      signUpFormData.append('nickName', formData.nickName);
+      signUpFormData.append('loginSource', 'THIS');
+    } else {
+      // company
+      signUpFormData.append('companyName', formData.name);
+      signUpFormData.append('email', formData.email);
+      signUpFormData.append('password', formData.password);
+      signUpFormData.append('phoneNumber', formData.phoneNumber);
+      signUpFormData.append(
+        'address',
+        formData.zipcode +
+          ' ' +
+          formData.address +
+          ' ' +
+          formData.detailAddress,
+      );
+      signUpFormData.append('shortDescription', formData.briefDescription);
+      signUpFormData.append('description', formData.detailDescription);
+    }
+
+    return signUpFormData;
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
-    console.log(gender, userType);
-    navigate('/login');
+    const data: FormData = getSignUpData();
+
+    // 닉네임 중복 확인
+    UserService.checkNickname(formData.nickName)
+      .then((response) => {
+        if (response.isSucceeded) {
+          alert('이미 존재하는 닉네임입니다.');
+          return;
+        }
+
+        // 이메일 중복 확인
+        UserService.checkNickname(formData.nickName)
+          .then((response) => {
+            if (response.isSucceeded) {
+              alert('이미 존재하는 닉네임입니다.');
+              return;
+            }
+
+            // 회원가입
+            if (userType === 'user') {
+              UserService.signUp(data)
+                .then((response) => {
+                  if (response.isSucceeded) {
+                    navigate('/login');
+                  } else {
+                    alert(response.message);
+                  }
+                })
+                .catch((error) => {
+                  console.error('user signIn error: ', error);
+                });
+            } else {
+              UserService.companySignUp(data)
+                .then((response) => {
+                  if (response.isSucceeded) {
+                    navigate('/login');
+                  } else {
+                    alert(response.message);
+                  }
+                })
+                .catch((error) => {
+                  console.error('company signIn error: ', error);
+                });
+            }
+          })
+          .catch((error) => {
+            console.error('check email error: ', error);
+          });
+      })
+      .catch((error) => {
+        console.error('check nickname error: ', error);
+      });
   };
 
   return (
@@ -102,7 +198,7 @@ const SignUp: React.FC = () => {
               <SignUpLabel key={inputField.label}>
                 {inputField.label}
                 <CustomTextArea
-                  value={formData[inputField.name as keyof FormData]}
+                  value={formData[inputField.name as keyof SignUpFormData]}
                   placeholder={inputField.placeholder}
                   onChange={(e) =>
                     setFormData({
@@ -119,7 +215,7 @@ const SignUp: React.FC = () => {
                   label={inputField.label}
                   type={inputField.type}
                   placeholder={inputField.placeholder}
-                  value={formData[inputField.name as keyof FormData]}
+                  value={formData[inputField.name as keyof SignUpFormData]}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
@@ -127,7 +223,20 @@ const SignUp: React.FC = () => {
                     })
                   }
                 />
-                <ZipcodeSearchButton>우편번호 검색</ZipcodeSearchButton>
+                <ZipcodeSearchButton onClick={(e) => handelSearchZipcode(e)}>
+                  우편번호 검색
+                </ZipcodeSearchButton>
+                <ModalComponent
+                  isOpen={modalOpen}
+                  setIsOpen={setModalOpen}
+                  contentLabel="우편번호 검색"
+                >
+                  <ZipCodeSearch
+                    setFormData={setFormData}
+                    formData={formData}
+                    setModalOpen={setModalOpen}
+                  />
+                </ModalComponent>
               </ZipcodeContainer>
             ) : (
               <InputItem
@@ -135,7 +244,7 @@ const SignUp: React.FC = () => {
                 label={inputField.label}
                 type={inputField.type}
                 placeholder={inputField.placeholder}
-                value={formData[inputField.name as keyof FormData]}
+                value={formData[inputField.name as keyof SignUpFormData]}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -181,7 +290,7 @@ const inputFields = [
     fieldType: 'user',
     label: '닉네임',
     type: 'text',
-    name: 'nickname',
+    name: 'nickName',
     placeholder: '닉네임을 입력해주세요',
   },
   {
@@ -202,7 +311,7 @@ const inputFields = [
     fieldType: 'all',
     label: '전화번호',
     type: 'tel',
-    name: 'phone',
+    name: 'phoneNumber',
     placeholder: '전화번호를 입력해주세요',
   },
   {

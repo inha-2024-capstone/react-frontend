@@ -1,20 +1,72 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
+  useNavigate,
 } from 'react-router-dom';
 import { useAuthStore } from './store/store';
-import { LoginPage, SignUpPage, HomePage, ProductPage } from './pages';
-import ProductRegisterPage from './pages/ProductRegisterPage';
+import {
+  LoginPage,
+  SignUpPage,
+  HomePage,
+  ProductPage,
+  OAuthRedirectPage,
+  ProductRegisterPage,
+} from './pages';
+import UserService from './services/UserService';
 
 const MyPage: React.FC = () => {
-  return <h1>My Page</h1>;
+  const navigate = useNavigate();
+
+  const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    UserService.logout().then((response) => {
+      if (response.isSucceeded === false) {
+        alert('로그아웃에 실패했습니다.');
+        return;
+      }
+      localStorage.removeItem('yogerAccessToken');
+      localStorage.removeItem('yogerRefreshToken');
+      useAuthStore.getState().logout();
+      navigate('/');
+    });
+  };
+
+  return (
+    <main>
+      <h1>My Page</h1>
+      <button onClick={(e) => handleLogout(e)}>Logout</button>
+    </main>
+  );
 };
 
 const App: React.FC = () => {
   const isAuth = useAuthStore((state) => state.isAuth);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('yogerAccessToken');
+    const refreshToken = localStorage.getItem('yogerRefreshToken');
+    if (accessToken && refreshToken) {
+      UserService.refreshToken()
+        .then((response) => {
+          if (response.isSucceeded === false) {
+            localStorage.removeItem('yogerAccessToken');
+            localStorage.removeItem('yogerRefreshToken');
+            useAuthStore.getState().logout();
+            return;
+          }
+          console.log('refresh token');
+          useAuthStore
+            .getState()
+            .login(response.accessToken, response.refreshToken);
+        })
+        .catch((error) => {
+          console.log('error', error);
+        });
+    }
+  }, []);
 
   return (
     <Router>
@@ -28,6 +80,7 @@ const App: React.FC = () => {
           path="/login"
           element={isAuth ? <Navigate to="/" /> : <LoginPage />}
         />
+        <Route path="/oauth2/redirect" element={<OAuthRedirectPage />} />
         <Route
           path="/signUp"
           element={isAuth ? <Navigate to="/" /> : <SignUpPage />}
