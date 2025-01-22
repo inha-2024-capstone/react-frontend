@@ -7,6 +7,7 @@ interface ModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   contentLabel: string;
   children: React.ReactNode;
+  modalType?: string;
 }
 
 const ModalComponent: React.FC<ModalProps> = ({
@@ -14,12 +15,13 @@ const ModalComponent: React.FC<ModalProps> = ({
   setIsOpen,
   contentLabel,
   children,
+  modalType,
 }) => {
   return (
     <Modal
       isOpen={isOpen}
       contentLabel={contentLabel}
-      style={customStyles}
+      style={modalType === 'bottom' ? customBottomStyles : customStyles}
       onRequestClose={() => setIsOpen(false)}
     >
       {children}
@@ -48,5 +50,21 @@ const customStyles = {
     backgroundColor: 'white',
     borderRadius: '0.5rem',
     zIndex: 1000,
+  },
+};
+
+const customBottomStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1000,
+  },
+  content: {
+    height: 'max-content',
+    padding: 0,
+    margin: 0,
+    backgroundColor: 'white',
+    borderRadius: '0.5rem 0.5rem 0 0',
+    inset: 'auto 0 0 0',
+    zIndex: '1000',
   },
 };
