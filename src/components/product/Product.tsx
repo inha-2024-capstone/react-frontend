@@ -4,6 +4,9 @@ import useDocumentTitle from '../../hooks/useDocumentTitle';
 import ProductService from '../../services/ProductService';
 import usePriceFormatter from '../../hooks/usePriceFormatter';
 import { ProductDetailType } from '../../types/productTypes';
+import { useUserTypeStore } from '../../store/store';
+import PriceOffer from './PriceOffer';
+import ProductBuy from './ProductBuy';
 import { RecImg } from '../../assets/common';
 import styled from 'styled-components';
 
@@ -24,6 +27,7 @@ const Product: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // id를 가져옴
   const name = `Product ${id}`;
   const brand = `Brand ${id}`;
+  const userType = useUserTypeStore((state) => state.userType);
 
   useDocumentTitle(`${name} - ${brand} | Yoger`);
 
@@ -69,10 +73,7 @@ const Product: React.FC = () => {
       </ProductArticle>
 
       {/* 구매하기 버튼 */}
-      <BuySection>
-        <BuyTitle>상품 구매</BuyTitle>
-        <BuyButton>구매하기</BuyButton>
-      </BuySection>
+      {userType === 'user' ? <ProductBuy /> : <PriceOffer />}
     </ProductContainer>
   );
 };
@@ -136,24 +137,4 @@ const DetailDesc = styled.p`
   white-space: pre-wrap;
   word-break: break-all;
   line-height: 1.6;
-`;
-// 구매하기 버튼
-const BuySection = styled.section`
-  width: 100%;
-  min-width: 320px;
-  max-width: 600px;
-  position: fixed;
-  bottom: 0;
-`;
-const BuyTitle = styled.h2`
-  display: none;
-`;
-const BuyButton = styled.button`
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #fff;
-  background-color: #8e8982;
-  border: none;
 `;
