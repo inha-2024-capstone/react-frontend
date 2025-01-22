@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import styled from 'styled-components';
-import { FiDelete } from 'react-icons/fi';
 import ModalComponent from '../common/ModalComponent';
+import usePriceFormatter from '../../hooks/usePriceFormatter';
+import { FiDelete } from 'react-icons/fi';
+import styled from 'styled-components';
 
 interface Item {
   quantity: number;
@@ -13,6 +14,7 @@ const PriceOffer: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
   const [items, setItems] = useState<Item[]>([]);
+  const priceFormatter = usePriceFormatter();
 
   const handleAddItem = () => {
     if (quantity > 0 && price) {
@@ -55,9 +57,11 @@ const PriceOffer: React.FC = () => {
           <OfferList>
             {items.map((item, index) => (
               <OfferItem key={index}>
-                <OfferQuantity>{item.quantity} 개</OfferQuantity>
+                <OfferQuantity>
+                  {priceFormatter(item.quantity)} 개
+                </OfferQuantity>
                 <OfferItemDivider>
-                  <OfferPrice>{item.price} 원</OfferPrice>
+                  <OfferPrice>{priceFormatter(item.price)} 원</OfferPrice>
                   <OfferRemoveBtn onClick={() => handleRemoveItem(index)}>
                     <FiDelete />
                   </OfferRemoveBtn>
