@@ -41,6 +41,13 @@ const Header: React.FC = () => {
         <PrevButton onClick={goBack}>
           <PrevImg src={PrevIcon} alt="뒤로가기" />
         </PrevButton>
+      ) : location.pathname === '/ordersheet' ? (
+        <>
+          <IconButton onClick={goBack}>
+            <IconImg src={PrevIcon} alt="이전 페이지" />
+          </IconButton>
+          <OrdersheetTitle>주문서</OrdersheetTitle>
+        </>
       ) : productRegex.test(location.pathname) ? (
         <>
           <IconButton onClick={goBack}>
@@ -90,6 +97,14 @@ const PrevButton = styled.button`
 `;
 const PrevImg = styled.img`
   height: 1.5rem;
+`;
+const OrdersheetTitle = styled.h1`
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
 `;
 const Title = styled.h1`
   margin: 0;
