@@ -57,6 +57,10 @@ const customBottomStyles = {
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 1000,
+    width: '100%',
+    minWidth: '320px',
+    maxWidth: '600px',
+    justifySelf: 'center',
   },
   content: {
     height: 'max-content',
