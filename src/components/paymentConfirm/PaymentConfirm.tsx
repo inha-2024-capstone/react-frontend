@@ -4,7 +4,7 @@ import { ShirtProductImg, TeaProductImg } from '../../assets/home';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import styled, { keyframes } from 'styled-components';
 
-const PaymentConfirmPage: React.FC = () => {
+const PaymentConfirm: React.FC = () => {
   const priceFormatter = usePriceFormatter();
 
   return (
@@ -32,7 +32,7 @@ const PaymentConfirmPage: React.FC = () => {
   );
 };
 
-export default PaymentConfirmPage;
+export default PaymentConfirm;
 
 const ConfirmArticle = styled.article`
   display: flex;
