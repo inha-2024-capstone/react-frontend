@@ -9,17 +9,20 @@ import PriceOffer from './PriceOffer';
 import ProductBuy from './ProductBuy';
 import { RecImg } from '../../assets/common';
 import styled from 'styled-components';
+import { IoLogoWechat } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
 
 const Product: React.FC = () => {
   const [productInfo, setProductInfo] = useState<ProductDetailType>({
     id: 0,
-    name: '',
-    priceByQuantities: [],
-    description: '',
-    imageUrl: '',
+    name: 'product name',
+    priceByQuantities: [{ quantity: 1, price: 1000 }],
+    description: 'product description\nproduct description',
+    imageUrl:
+      'https://i.pinimg.com/236x/32/71/f1/3271f1c9fba13eeb7bea0275eda72e52.jpg',
     state: '',
     creatorId: 0,
-    creatorName: '',
+    creatorName: 'seller name',
     dueDate: '',
     soldQuantity: 0,
   });
@@ -48,7 +51,12 @@ const Product: React.FC = () => {
         {/* 제품 정보 */}
         <ProductInfo>
           <ProductImg src={productInfo.imageUrl || RecImg} alt="상품 이미지" />
-          <ProductBrand>{productInfo.creatorName}</ProductBrand>
+          <BrandWrapper>
+            <ProductBrand>{productInfo.creatorName}</ProductBrand>
+            <Link to="/chat">
+              <IoLogoWechat />
+            </Link>
+          </BrandWrapper>
           <ProductName>{productInfo.name}</ProductName>
           <ProductPrice>
             {priceFormatter(productInfo.priceByQuantities[0]?.price || 0)} 원
@@ -103,6 +111,19 @@ const ProductBrand = styled.h2`
   font-size: 0.9rem;
   color: #8e8982;
   font-weight: 600;
+`;
+const BrandWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  color: #8e8982;
+
+  & > a {
+    color: #8e8982;
+    margin-left: auto;
+    font-size: 2rem;
+    margin-right: 1rem;
+    margin-top: 0.3rem;
+  }
 `;
 const ProductName = styled.h3`
   margin: 0;
