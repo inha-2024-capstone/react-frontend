@@ -48,11 +48,15 @@ const Header: React.FC = () => {
           </IconButton>
           <OrdersheetTitle>주문서</OrdersheetTitle>
         </>
-      ) : productRegex.test(location.pathname) ? (
+      ) : productRegex.test(location.pathname) ||
+        location.pathname === '/chat' ? (
         <>
           <IconButton onClick={goBack}>
             <IconImg src={PrevIcon} alt="이전 페이지" />
           </IconButton>
+          {location.pathname === '/chat' && (
+            <ChatHeaderTitle>Seller Name</ChatHeaderTitle>
+          )}
           <IconButton onClick={() => navigate('/')}>
             <IconImg src={HomeWhiteIcon} alt="홈으로" />
           </IconButton>
@@ -89,6 +93,7 @@ const Container = styled.header`
   position: sticky;
   top: 0;
   background-color: #fff;
+  align-items: anchor-center;
 `;
 const PrevButton = styled.button`
   background-color: transparent;
@@ -149,4 +154,9 @@ const IconBtn = styled.button`
   padding: 0;
   margin-left: 1.2rem;
   display: flex;
+`;
+const ChatHeaderTitle = styled.div`
+  font-size: 1.5rem;
+  margin-left: 1rem;
+  font-weight: 600;
 `;
