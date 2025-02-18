@@ -6,3 +6,4 @@ export { default as ProductRegisterPage } from './ProductRegisterPage';
 export { default as OAuthRedirectPage } from './OAuthRedirectPage';
 export { default as MyPage } from './MyPage';
 export { default as OrdersheetPage } from './OrdersheetPage';
+export { default as ChatPage } from './ChatPage';
