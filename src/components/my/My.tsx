@@ -9,53 +9,56 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { MyWhiteIcon } from '../../assets/navMenu';
 import { RiFileList3Fill } from 'react-icons/ri';
+// import ExProfileImg from '../../assets/img_profile_ex.jpeg';
 
 const My: React.FC = () => {
-  const [userType, setUserType] = useState<string>(
-    useUserTypeStore.getState().userType,
-  );
+  // const [userType, setUserType] = useState<string>(
+  //   useUserTypeStore.getState().userType,
+  // );
+  const [userType, setUserType] = useState<string>('user');
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const profileImage = require('../../assets/img_profile_ex.jpeg');
 
-  useEffect(() => {
-    if (
-      useUserInfoStore.getState().nickName === '' &&
-      useCompanyInfoStore.getState().companyName === ''
-    ) {
-      setIsLoaded(true);
+  // useEffect(() => {
+  //   if (
+  //     useUserInfoStore.getState().nickName === '' &&
+  //     useCompanyInfoStore.getState().companyName === ''
+  //   ) {
+  //     setIsLoaded(true);
 
-      if (useUserTypeStore.getState().userType === 'user') {
-        UserService.getAuthInfo()
-          .then((response) => {
-            if (response.isSucceeded === false) {
-              alert('유저 정보를 가져오는데 실패했습니다.');
-              return;
-            }
-            console.log('auth info', response);
-            useUserInfoStore.getState().setUserInfo(response.result);
-            setIsLoaded(false);
-          })
-          .catch((error) => {
-            useUserTypeStore.getState().setUserType('company');
-            setUserType('company');
-          });
-      } else {
-        UserService.getCompanyAuthInfo()
-          .then((response) => {
-            if (response.isSucceeded === false) {
-              alert('유저 정보를 가져오는데 실패했습니다.');
-              return;
-            }
-            console.log('company auth info', response);
-            useCompanyInfoStore.getState().setCompanyInfo(response.result);
-            setIsLoaded(false);
-          })
-          .catch((error) => {
-            useUserTypeStore.getState().setUserType('user');
-            setUserType('user');
-          });
-      }
-    }
-  }, [userType]);
+  //     if (useUserTypeStore.getState().userType === 'user') {
+  //       UserService.getAuthInfo()
+  //         .then((response) => {
+  //           if (response.isSucceeded === false) {
+  //             alert('유저 정보를 가져오는데 실패했습니다.');
+  //             return;
+  //           }
+  //           console.log('auth info', response);
+  //           useUserInfoStore.getState().setUserInfo(response.result);
+  //           setIsLoaded(false);
+  //         })
+  //         .catch((error) => {
+  //           useUserTypeStore.getState().setUserType('company');
+  //           setUserType('company');
+  //         });
+  //     } else {
+  //       UserService.getCompanyAuthInfo()
+  //         .then((response) => {
+  //           if (response.isSucceeded === false) {
+  //             alert('유저 정보를 가져오는데 실패했습니다.');
+  //             return;
+  //           }
+  //           console.log('company auth info', response);
+  //           useCompanyInfoStore.getState().setCompanyInfo(response.result);
+  //           setIsLoaded(false);
+  //         })
+  //         .catch((error) => {
+  //           useUserTypeStore.getState().setUserType('user');
+  //           setUserType('user');
+  //         });
+  //     }
+  //   }
+  // }, [userType]);
 
   return (
     <>
@@ -73,15 +76,16 @@ const My: React.FC = () => {
               <MyTitle>My Info</MyTitle>
               <MyImg
                 src={
-                  (
-                    userType === 'user'
-                      ? useUserInfoStore.getState().imageUri
-                      : useCompanyInfoStore.getState().imageUrl
-                  )
-                    ? userType === 'user'
-                      ? useUserInfoStore.getState().imageUri
-                      : useCompanyInfoStore.getState().imageUrl
-                    : MyWhiteIcon
+                  // (
+                  //   userType === 'user'
+                  //     ? useUserInfoStore.getState().imageUri
+                  //     : useCompanyInfoStore.getState().imageUrl
+                  // )
+                  //   ? userType === 'user'
+                  //     ? useUserInfoStore.getState().imageUri
+                  //     : useCompanyInfoStore.getState().imageUrl
+                  //   : MyWhiteIcon
+                  profileImage
                 }
                 alt="profile"
               />

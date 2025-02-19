@@ -37,23 +37,23 @@ type UserInfoState = UserInfo & {
 };
 
 export const useUserInfoStore = create<UserInfoState>((set) => ({
-  address: '',
-  email: '',
-  gender: '',
+  address: '인천광역시 미추홀구 인하로 100',
+  email: '12201808@inha.edu',
+  gender: 'Male',
   imageUri: '',
-  nickName: '',
-  phoneNumber: '',
-  username: '',
+  nickName: '요거',
+  phoneNumber: '010-0000-0000',
+  username: '김요거',
   setUserInfo: (userInfo: UserInfo) => set(userInfo),
   logout: () =>
     set({
-      address: '',
-      email: '',
-      gender: '',
+      address: '인천광역시 미추홀구 인하로 100',
+      email: '12201808@inha.edu',
+      gender: 'Male',
       imageUri: '',
-      nickName: '',
-      phoneNumber: '',
-      username: '',
+      nickName: '요거',
+      phoneNumber: '010-0000-0000',
+      username: '김요거',
     }),
 }));
 

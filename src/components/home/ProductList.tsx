@@ -5,10 +5,17 @@ import ProductService from '../../services/ProductService';
 import usePriceFormatter from '../../hooks/usePriceFormatter';
 import { ProductListType } from '../../types/productTypes';
 import styled from 'styled-components';
+import {
+  TeaProductImg,
+  LifeProductImg,
+  ShowerProductImg,
+  ShirtProductImg,
+} from '../../assets/home';
 
 const ProductList: React.FC = () => {
   const [divideCount, setDivideCount] = useState<number>(2);
-  const [productList, setProductList] = useState<ProductListType[]>([]);
+  const [productList, setProductList] =
+    useState<ProductListType[]>(productListDummy);
   const priceFormatter = usePriceFormatter();
 
   useEffect(() => {
@@ -142,3 +149,141 @@ const ProductDetail = styled.div`
   padding: 0 0.2rem;
   height: 6rem;
 `;
+
+const productListDummy = [
+  {
+    id: 1,
+    name: '스페셜 찻잔',
+    priceByQuantities: [
+      {
+        quantity: 1,
+        price: 10000,
+      },
+    ],
+    creatorName: '차마시기',
+    state: '판매중',
+    dueDate: '2025-12-31',
+    soldQuantity: 0,
+    thumbnailImageUrl: TeaProductImg,
+  },
+  {
+    id: 2,
+    name: '라이프 셀프 패키지 (오리지널 프리미엄 라인)',
+    priceByQuantities: [
+      {
+        quantity: 1,
+        price: 10000,
+      },
+    ],
+    creatorName: '셀프산타',
+    state: '판매중',
+    dueDate: '2025-12-31',
+    soldQuantity: 0,
+    thumbnailImageUrl: LifeProductImg,
+  },
+  {
+    id: 3,
+    name: '목욕 패키지',
+    priceByQuantities: [
+      {
+        quantity: 1,
+        price: 10000,
+      },
+    ],
+    creatorName: '휴먼워셔',
+    state: '판매중',
+    dueDate: '2025-12-31',
+    soldQuantity: 0,
+    thumbnailImageUrl: ShowerProductImg,
+  },
+  {
+    id: 4,
+    name: '괴물쥐 티셔츠 3종 세트',
+    priceByQuantities: [
+      {
+        quantity: 1,
+        price: 10000,
+      },
+    ],
+    creatorName: '김기정',
+    state: '판매중',
+    dueDate: '2025-12-31',
+    soldQuantity: 0,
+    thumbnailImageUrl: ShirtProductImg,
+  },
+  {
+    id: 5,
+    name: '스페셜 찻잔',
+    priceByQuantities: [
+      {
+        quantity: 1,
+        price: 10000,
+      },
+    ],
+    creatorName: '차마시기',
+    state: '판매중',
+    dueDate: '2025-12-31',
+    soldQuantity: 0,
+    thumbnailImageUrl: TeaProductImg,
+  },
+  {
+    id: 6,
+    name: '라이프 셀프 패키지 (오리지널 프리미엄 라인)',
+    priceByQuantities: [
+      {
+        quantity: 1,
+        price: 10000,
+      },
+    ],
+    creatorName: '셀프산타',
+    state: '판매중',
+    dueDate: '2025-12-31',
+    soldQuantity: 0,
+    thumbnailImageUrl: LifeProductImg,
+  },
+  {
+    id: 7,
+    name: '목욕 패키지',
+    priceByQuantities: [
+      {
+        quantity: 1,
+        price: 10000,
+      },
+    ],
+    creatorName: '휴먼워셔',
+    state: '판매중',
+    dueDate: '2025-12-31',
+    soldQuantity: 0,
+    thumbnailImageUrl: ShowerProductImg,
+  },
+  {
+    id: 8,
+    name: '괴물쥐 티셔츠 3종 세트',
+    priceByQuantities: [
+      {
+        quantity: 1,
+        price: 10000,
+      },
+    ],
+    creatorName: '김기정',
+    state: '판매중',
+    dueDate: '2025-12-31',
+    soldQuantity: 0,
+    thumbnailImageUrl: ShirtProductImg,
+  },
+  {
+    id: 9,
+    name: '스페셜 찻잔',
+    priceByQuantities: [
+      {
+        quantity: 1,
+        price: 10000,
+      },
+    ],
+    creatorName: '차마시기',
+    state: '판매중',
+    dueDate: '2025-12-31',
+    soldQuantity: 0,
+    thumbnailImageUrl: TeaProductImg,
+  },
+];

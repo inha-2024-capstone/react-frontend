@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ShirtProductImg, TeaProductImg } from '../../assets/home';
 import usePriceFormatter from '../../hooks/usePriceFormatter';
 import styled from 'styled-components';
@@ -6,6 +6,7 @@ import styled from 'styled-components';
 const Ordersheet: React.FC = () => {
   const location = useLocation();
   const fromList = location.state?.fromList;
+  const naviage = useNavigate();
 
   const formatNumber = (num: number): string => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -71,7 +72,7 @@ const Ordersheet: React.FC = () => {
       </OrdersheetArticle>
 
       {fromList !== true && (
-        <PaymentButton>
+        <PaymentButton onClick={() => naviage('/payment-confirmation')}>
           {formatNumber(paymentAmount.total)}원 결제하기
         </PaymentButton>
       )}

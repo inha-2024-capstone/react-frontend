@@ -91,6 +91,7 @@ const LookupSection = styled.section`
   padding: 1rem;
   word-break: keep-all;
   overflow: auto;
+  flex: 1;
 `;
 
 const paymentList = [
