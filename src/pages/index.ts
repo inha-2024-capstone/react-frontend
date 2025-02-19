@@ -8,3 +8,4 @@ export { default as MyPage } from './MyPage';
 export { default as OrdersheetPage } from './OrdersheetPage';
 export { default as ChatPage } from './ChatPage';
 export { default as PaymentConfirmPage } from './PaymentConfirmPage';
+export { default as PaymentLookupPage } from './PaymentLookupPage';
