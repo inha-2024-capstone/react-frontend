@@ -1,8 +1,12 @@
+import { useLocation } from 'react-router-dom';
 import { ShirtProductImg, TeaProductImg } from '../../assets/home';
 import usePriceFormatter from '../../hooks/usePriceFormatter';
 import styled from 'styled-components';
 
 const Ordersheet: React.FC = () => {
+  const location = useLocation();
+  const fromList = location.state?.fromList;
+
   const formatNumber = (num: number): string => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
@@ -66,9 +70,11 @@ const Ordersheet: React.FC = () => {
         </OrdersheetSection>
       </OrdersheetArticle>
 
-      <PaymentButton>
-        {formatNumber(paymentAmount.total)}원 결제하기
-      </PaymentButton>
+      {fromList !== true && (
+        <PaymentButton>
+          {formatNumber(paymentAmount.total)}원 결제하기
+        </PaymentButton>
+      )}
     </Container>
   );
 };

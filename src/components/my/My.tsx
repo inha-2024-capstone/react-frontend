@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import UserService from '../../services/UserService';
 import {
   useCompanyInfoStore,
@@ -7,6 +8,7 @@ import {
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { MyWhiteIcon } from '../../assets/navMenu';
+import { RiFileList3Fill } from 'react-icons/ri';
 
 const My: React.FC = () => {
   const [userType, setUserType] = useState<string>(
@@ -103,6 +105,12 @@ const My: React.FC = () => {
             </MainSection>
           </MainBackground>
 
+          {/* 주문 내역 링크 */}
+          <PaymentLookupLink to="/payment-lookup">
+            <PaymentLookupIcon />
+            {userType === 'user' ? '주문' : '판매'}내역 보기
+          </PaymentLookupLink>
+
           {/* 사용자 상세 정보 */}
           <UserDetail>
             <UserDetailTitle>세부 정보</UserDetailTitle>
@@ -173,6 +181,25 @@ const DetailItem: React.FC<{ title: string; content: string }> = ({
   );
 };
 
+// 주문 내역 보기 링크
+const PaymentLookupLink = styled(Link)`
+  margin-top: 1rem;
+  text-align: right;
+  color: #1e3050;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  background-color: #f1f1f1;
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+`;
+const PaymentLookupIcon = styled(RiFileList3Fill)`
+  margin-right: 0.5rem;
+  margin-left: auto;
+  font-size: 1.5rem;
+`;
+
 const MyMain = styled.main`
   display: flex;
   flex-direction: column;
@@ -213,6 +240,7 @@ const MyEmail = styled.p`
 `;
 const UserDetail = styled.section`
   padding: 1rem;
+  padding-top: 0;
 `;
 const UserDetailTitle = styled.h3`
   margin-bottom: 0.5rem;

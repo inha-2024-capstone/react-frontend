@@ -41,12 +41,15 @@ const Header: React.FC = () => {
         <PrevButton onClick={goBack}>
           <PrevImg src={PrevIcon} alt="뒤로가기" />
         </PrevButton>
-      ) : location.pathname === '/ordersheet' ? (
+      ) : location.pathname === '/ordersheet' ||
+        location.pathname === '/payment-lookup' ? (
         <>
           <IconButton onClick={goBack}>
             <IconImg src={PrevIcon} alt="이전 페이지" />
           </IconButton>
-          <OrdersheetTitle>주문서</OrdersheetTitle>
+          <OrdersheetTitle>
+            {location.pathname === '/ordersheet' ? '주문서' : '주문 내역'}
+          </OrdersheetTitle>
         </>
       ) : productRegex.test(location.pathname) ||
         location.pathname === '/chat' ? (
