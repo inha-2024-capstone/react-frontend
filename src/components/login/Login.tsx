@@ -20,18 +20,22 @@ const Login: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    useUserTypeStore.getState().setUserType(userType);
-    UserService.signIn(inputEmail, inputPassword).then((response) => {
-      if (response.isSucceeded === false) {
-        alert('로그인에 실패했습니다.');
-        return;
-      }
+    // useUserTypeStore.getState().setUserType(userType);
+    // UserService.signIn(inputEmail, inputPassword).then((response) => {
+    //   if (response.isSucceeded === false) {
+    //     alert('로그인에 실패했습니다.');
+    //     return;
+    //   }
 
-      localStorage.setItem('yogerAccessToken', response.accessToken);
-      localStorage.setItem('yogerRefreshToken', response.refreshToken);
-      login(response.accessToken, response.refreshToken);
-      navigate('/');
-    });
+    //   localStorage.setItem('yogerAccessToken', response.accessToken);
+    //   localStorage.setItem('yogerRefreshToken', response.refreshToken);
+    //   login(response.accessToken, response.refreshToken);
+    //   navigate('/');
+    // });
+    localStorage.setItem('yogerAccessToken', 'token');
+    localStorage.setItem('yogerRefreshToken', 'token');
+    login('token', 'token');
+    navigate('/');
   };
 
   const handleOAuthLogin = (loginSource: string) => {
