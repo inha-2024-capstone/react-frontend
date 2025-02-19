@@ -21,18 +21,24 @@ const Header: React.FC = () => {
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    UserService.logout().then((response) => {
-      if (response.isSucceeded === false) {
-        alert('로그아웃에 실패했습니다.');
-        return;
-      }
-      localStorage.removeItem('yogerAccessToken');
-      localStorage.removeItem('yogerRefreshToken');
-      useAuthStore.getState().logout();
-      useUserInfoStore.getState().logout();
-      useCompanyInfoStore.getState().logout();
-      navigate('/');
-    });
+    // UserService.logout().then((response) => {
+    //   if (response.isSucceeded === false) {
+    //     alert('로그아웃에 실패했습니다.');
+    //     return;
+    //   }
+    //   localStorage.removeItem('yogerAccessToken');
+    //   localStorage.removeItem('yogerRefreshToken');
+    //   useAuthStore.getState().logout();
+    //   useUserInfoStore.getState().logout();
+    //   useCompanyInfoStore.getState().logout();
+    //   navigate('/');
+    // });
+    localStorage.removeItem('yogerAccessToken');
+    localStorage.removeItem('yogerRefreshToken');
+    useAuthStore.getState().logout();
+    useUserInfoStore.getState().logout();
+    useCompanyInfoStore.getState().logout();
+    navigate('/');
   };
 
   return (
@@ -92,7 +98,7 @@ export default Header;
 const Container = styled.header`
   display: flex;
   z-index: 100;
-  padding: 3rem 1rem 1rem 1rem;
+  padding: 1.5rem 1rem 1rem 1rem;
   position: sticky;
   top: 0;
   background-color: #fff;
