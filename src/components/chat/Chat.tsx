@@ -3,6 +3,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { AiFillPicture } from 'react-icons/ai';
 import { FiSend } from 'react-icons/fi';
 import styled from 'styled-components';
+import React, { useEffect, useRef } from 'react';
 
 type ChatItemType = {
   id: number;
@@ -11,7 +12,14 @@ type ChatItemType = {
 };
 
 const Chat: React.FC = () => {
+  const messagesEndRef = useRef<HTMLDivElement>(null); // 마지막 메시지에 대한 ref
   useDocumentTitle('채팅 | Yoger');
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView();
+    }
+  }, []);
 
   return (
     <>
@@ -24,6 +32,7 @@ const Chat: React.FC = () => {
             showIcon={index === 0 || chatList[index - 1].sender !== chat.sender}
           />
         ))}
+        <div ref={messagesEndRef} />
       </ChatList>
 
       {/* 채팅 입력 */}
