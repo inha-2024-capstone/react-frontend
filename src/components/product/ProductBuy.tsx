@@ -210,15 +210,14 @@ const BuyItemDivider = styled.div`
   align-items: center;
 `;
 const BuyPrice = styled.span`
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #585147;
 `;
 const BuyRemoveBtn = styled.button`
   background-color: transparent;
   border: none;
-  font-size: 1rem;
-  height: 1.5rem;
+  font-size: 0.9rem;
   color: #8e8982;
   padding: 0;
   margin: 0 0 0 0.8rem;
@@ -229,22 +228,22 @@ const BuyInfo = styled.div`
   width: 100%;
 `;
 const BuyInfoText = styled.div`
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: #585147;
 `;
 const BuyBottom = styled.div`
   display: flex;
   // align-items: center;
-  margin-top: 1rem;
+  margin-top: 0.7rem;
   align-items: center;
 `;
 const BuyInfoBtn = styled.button`
   background-color: #585147;
   border: none;
-  width: 1.8rem;
-  height: 1.8rem;
-  font-size: 1.2rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.9rem;
   color: #fff;
   padding: 0.3rem;
   border-radius: 6px;
@@ -286,12 +285,12 @@ const BuyBtn = styled.button<BuyBtnProps>`
 `;
 
 const colorOptions = [
-  { value: 'pink', label: 'Pink' },
-  { value: 'blue', label: 'Blue' },
-  { value: 'green', label: 'Green' },
+  { value: 'Pink', label: 'Pink' },
+  { value: 'Blue', label: 'Blue' },
+  { value: 'Green', label: 'Green' },
 ];
 const sizeOptions = [
-  { value: 's', label: 'S' },
-  { value: 'm', label: 'M' },
-  { value: 'l', label: 'L' },
+  { value: 'S', label: 'S' },
+  { value: 'M', label: 'M' },
+  { value: 'L', label: 'L' },
 ];
