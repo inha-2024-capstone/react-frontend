@@ -9,6 +9,8 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { MyWhiteIcon } from '../../assets/navMenu';
 import { RiFileList3Fill } from 'react-icons/ri';
+import { IoIosArrowForward } from 'react-icons/io';
+import { IoLogoWechat } from 'react-icons/io5';
 // import ExProfileImg from '../../assets/img_profile_ex.jpeg';
 
 const My: React.FC = () => {
@@ -109,11 +111,21 @@ const My: React.FC = () => {
             </MainSection>
           </MainBackground>
 
-          {/* 주문 내역 링크 */}
-          <PaymentLookupLink to="/payment-lookup">
-            <PaymentLookupIcon />
-            {userType === 'user' ? '주문' : '판매'}내역 보기
-          </PaymentLookupLink>
+          {/* 사용자 정보 링크 리스트 */}
+          <LinkList>
+            {linkListItems.map((item, index) => (
+              <LinkListItem key={index}>
+                <PaymentLookupLink to={item.link}>
+                  {/* <PaymentLookupIcon /> */}
+                  {item.icon}
+                  {item.title == '주문 내역' && userType !== 'user'
+                    ? '판매'
+                    : item.title}
+                  <IoIosArrowForward />
+                </PaymentLookupLink>
+              </LinkListItem>
+            ))}
+          </LinkList>
 
           {/* 사용자 상세 정보 */}
           <UserDetail>
@@ -187,21 +199,38 @@ const DetailItem: React.FC<{ title: string; content: string }> = ({
 
 // 주문 내역 보기 링크
 const PaymentLookupLink = styled(Link)`
-  margin-top: 1rem;
   text-align: right;
   color: #1e3050;
   font-size: 0.8rem;
   font-weight: 600;
   text-decoration: none;
   background-color: #f1f1f1;
-  padding: 0.5rem 1.5rem;
+  padding: 0.7rem 1rem 0.7rem 1.5rem;
   display: flex;
   align-items: center;
+
+  & > svg:last-child {
+    margin-left: auto;
+    font-size: 1.2rem;
+  }
 `;
 const PaymentLookupIcon = styled(RiFileList3Fill)`
-  margin-right: 0.5rem;
-  margin-left: auto;
+  margin-right: 0.8rem;
   font-size: 1.5rem;
+`;
+const ChatListIcon = styled(IoLogoWechat)`
+  margin-right: 0.8rem;
+  font-size: 1.5rem;
+`;
+const LinkList = styled.ul`
+  padding: 0;
+  margin: 0;
+  margin-top: 1rem;
+`;
+const LinkListItem = styled.li`
+  padding: 0;
+  margin: 0;
+  list-style: none;
 `;
 
 const MyMain = styled.main`
@@ -283,3 +312,16 @@ const LoadingTitle = styled.h2`
 const LoadingText = styled.p`
   font-size: 0.8rem;
 `;
+
+const linkListItems = [
+  {
+    title: '주문 내역',
+    link: '/payment-lookup',
+    icon: <PaymentLookupIcon />,
+  },
+  {
+    title: '채팅 목록',
+    link: '/chat-list',
+    icon: <ChatListIcon />,
+  },
+];
