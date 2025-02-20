@@ -1,9 +1,11 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useState } from 'react';
 import { PrevIcon, YogerLogoIcon } from '../../assets/common';
 import styled from 'styled-components';
 import { HomeWhiteIcon } from '../../assets/navMenu';
 import { MdOutlineLogout } from 'react-icons/md';
 import { RiEdit2Fill } from 'react-icons/ri';
+import { FaBell } from 'react-icons/fa6';
 import UserService from '../../services/UserService';
 import {
   useAuthStore,
@@ -18,6 +20,7 @@ const Header: React.FC = () => {
   const goBack = () => {
     navigate(-1);
   };
+  const [notificationCount, setnotificationCount] = useState<number>(6);
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -42,19 +45,24 @@ const Header: React.FC = () => {
   };
 
   return (
-    <Container>
+    <Container path={location.pathname}>
       {location.pathname === '/login' || location.pathname === '/signUp' ? (
         <PrevButton onClick={goBack}>
           <PrevImg src={PrevIcon} alt="뒤로가기" />
         </PrevButton>
       ) : location.pathname === '/ordersheet' ||
-        location.pathname === '/payment-lookup' ? (
+        location.pathname === '/payment-lookup' ||
+        location.pathname === '/notification' ? (
         <>
           <IconButton onClick={goBack}>
             <IconImg src={PrevIcon} alt="이전 페이지" />
           </IconButton>
           <OrdersheetTitle>
-            {location.pathname === '/ordersheet' ? '주문서' : '주문 내역'}
+            {location.pathname === '/ordersheet'
+              ? '주문서'
+              : location.pathname === '/payment-lookup'
+              ? '결제내역'
+              : '알림'}
           </OrdersheetTitle>
         </>
       ) : productRegex.test(location.pathname) ||
@@ -75,6 +83,15 @@ const Header: React.FC = () => {
           <HeaderLogo src={YogerLogoIcon} alt="Yoger" />
           <Title>My</Title>
           <IconButtons>
+            <Link to="/notification">
+              <AlertWrapper>
+                <IconBtn>
+                  <FaBell color="#2C3E50" />
+                </IconBtn>
+                {notificationCount > 0 && <Badge>{notificationCount}</Badge>}
+              </AlertWrapper>
+            </Link>
+
             <IconBtn>
               <RiEdit2Fill color="#2C3E50" />
             </IconBtn>
@@ -95,7 +112,7 @@ const Header: React.FC = () => {
 
 export default Header;
 
-const Container = styled.header`
+const Container = styled.header<{ path: string }>`
   display: flex;
   z-index: 100;
   padding: 1.5rem 1rem 1rem 1rem;
@@ -103,6 +120,9 @@ const Container = styled.header`
   top: 0;
   background-color: #fff;
   align-items: anchor-center;
+
+  border-bottom: ${(props) =>
+    props.path === '/notification' && '1px solid #e0e0e0'};
 `;
 const PrevButton = styled.button`
   background-color: transparent;
@@ -168,4 +188,24 @@ const ChatHeaderTitle = styled.div`
   font-size: 1.5rem;
   margin-left: 1rem;
   font-weight: 600;
+`;
+// 알람 버튼 래퍼
+const AlertWrapper = styled.div`
+  position: relative;
+
+  & > button {
+    cursor: pointer;
+    margin-left: 0;
+  }
+`;
+const Badge = styled.span`
+  position: absolute;
+  top: -5px;
+  right: -9px;
+  background-color: #ffd400;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 900;
 `;
