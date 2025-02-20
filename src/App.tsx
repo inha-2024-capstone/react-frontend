@@ -19,6 +19,7 @@ import {
   ChatPage,
   PaymentConfirmPage,
   PaymentLookupPage,
+  NotificationPage,
 } from './pages';
 import UserService from './services/UserService';
 
@@ -71,6 +72,7 @@ const App: React.FC = () => {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/payment-confirmation" element={<PaymentConfirmPage />} />
         <Route path="/payment-lookup" element={<PaymentLookupPage />} />
+        <Route path="/notification" element={<NotificationPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
