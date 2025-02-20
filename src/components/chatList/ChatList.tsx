@@ -40,7 +40,9 @@ const ChatListItem: React.FC<{ item: ChatListItemType }> = ({ item }) => {
   );
 };
 
-const ChatListMain = styled.main``;
+const ChatListMain = styled.main`
+  flex: 1;
+`;
 const ChatListSection = styled.section``;
 const ChatListContainer = styled.ul`
   list-style: none;
