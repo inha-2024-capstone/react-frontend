@@ -10,3 +10,4 @@ export { default as ChatPage } from './ChatPage';
 export { default as PaymentConfirmPage } from './PaymentConfirmPage';
 export { default as PaymentLookupPage } from './PaymentLookupPage';
 export { default as NotificationPage } from './NotificationPage';
+export { default as ChatListPage } from './ChatListPage';
