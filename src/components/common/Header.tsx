@@ -13,6 +13,13 @@ import {
   useUserInfoStore,
 } from '../../store/store';
 
+const subtitleList: { [key: string]: string } = {
+  '/ordersheet': '주문서',
+  '/payment-lookup': '결제내역',
+  '/notification': '알림',
+  '/chat-list': '채팅 목록',
+};
+
 const Header: React.FC = () => {
   const productRegex = /^\/product\/([^/]+)$/;
   const location = useLocation();
@@ -50,20 +57,12 @@ const Header: React.FC = () => {
         <PrevButton onClick={goBack}>
           <PrevImg src={PrevIcon} alt="뒤로가기" />
         </PrevButton>
-      ) : location.pathname === '/ordersheet' ||
-        location.pathname === '/payment-lookup' ||
-        location.pathname === '/notification' ? (
+      ) : location.pathname in subtitleList ? (
         <>
           <IconButton onClick={goBack}>
             <IconImg src={PrevIcon} alt="이전 페이지" />
           </IconButton>
-          <OrdersheetTitle>
-            {location.pathname === '/ordersheet'
-              ? '주문서'
-              : location.pathname === '/payment-lookup'
-              ? '결제내역'
-              : '알림'}
-          </OrdersheetTitle>
+          <OrdersheetTitle>{subtitleList[location.pathname]}</OrdersheetTitle>
         </>
       ) : productRegex.test(location.pathname) ||
         location.pathname === '/chat' ? (
@@ -122,7 +121,8 @@ const Container = styled.header<{ path: string }>`
   align-items: anchor-center;
 
   border-bottom: ${(props) =>
-    props.path === '/notification' && '1px solid #e0e0e0'};
+    (props.path === '/notification' || props.path === '/chat-list') &&
+    '1px solid #e0e0e0'};
 `;
 const PrevButton = styled.button`
   background-color: transparent;
