@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ShirtProductImg, TeaProductImg } from '../../assets/home';
 import usePriceFormatter from '../../hooks/usePriceFormatter';
 import styled from 'styled-components';
+import { useEffect } from 'react';
 
 const Ordersheet: React.FC = () => {
   const location = useLocation();
@@ -12,6 +13,58 @@ const Ordersheet: React.FC = () => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
   const priceFormatter = usePriceFormatter();
+
+  const generateMerchantUid = () => {
+    return 'HARU4CUT-' + Math.random().toString(36).substr(2, 9);
+  };
+
+  useEffect(() => {
+    // 포트원 라이브러리 추가
+    let script = document.querySelector(
+      `script[src="https://cdn.iamport.kr/v1/iamport.js"]`,
+    );
+
+    // 만약 스크립트가 존재하지 않으면
+    if (!script) {
+      // 새로운 스크립트 요소를 생성
+      const newScript = document.createElement('script');
+      newScript.src = 'https://cdn.iamport.kr/v1/iamport.js';
+      newScript.async = true;
+      document.body.appendChild(newScript); // 스크립트를 문서의 body에 추가
+    }
+
+    // 컴포넌트가 언마운트될 때 실행되는 함수 반환
+    return () => {
+      // 스크립트 요소가 존재하는지 확인 후 제거
+      if (script && script.parentNode === document.body) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
+  const onclickPay = (pgValue: string, payMethod: string) => {
+    (window as any).IMP.init('imp25188857');
+    const impUid = 'imp25188857';
+
+    const data = {
+      pg: pgValue,
+      pay_method: payMethod,
+      merchant_uid: generateMerchantUid(),
+      name: 'yoger test',
+      amount: 1,
+      m_redirect_url: '/payment-confirmation',
+    };
+
+    (window as any).IMP.request_pay(data, async (rsp: any) => {
+      if (rsp.success) {
+        console.log('결제 성공');
+        naviage('/payment-confirmation');
+      } else {
+        console.log(rsp);
+        console.log('결제 실패');
+      }
+    });
+  };
 
   return (
     <Container>
@@ -72,7 +125,9 @@ const Ordersheet: React.FC = () => {
       </OrdersheetArticle>
 
       {fromList !== true && (
-        <PaymentButton onClick={() => naviage('/payment-confirmation')}>
+        <PaymentButton
+          onClick={() => onclickPay('kakaopay.TC0ONETIME', 'kakaopay')}
+        >
           {formatNumber(paymentAmount.total)}원 결제하기
         </PaymentButton>
       )}
