@@ -1,13 +1,60 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ShirtProductImg, TeaProductImg } from '../../assets/home';
 import usePriceFormatter from '../../hooks/usePriceFormatter';
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import {
+  useCompanyInfoStore,
+  useUserInfoStore,
+  useUserTypeStore,
+} from '../../store/store';
+import OrderService from '../../services/OrderService';
+
+interface Item {
+  quantity: number;
+  price: number;
+  option: string | null;
+}
 
 const Ordersheet: React.FC = () => {
   const location = useLocation();
-  const fromList = location.state?.fromList;
   const naviage = useNavigate();
+  const fromList = location.state?.fromList;
+  const productInfo = location.state?.productInfo;
+  const selectedOptions = location.state?.selectedOptions;
+
+  console.log('user', useUserInfoStore.getState());
+  console.log('company', useCompanyInfoStore.getState());
+
+  const [userType, setUserType] = useState<string>(
+    useUserTypeStore.getState().userType,
+  );
+
+  const addressInfo = {
+    name:
+      userType === 'user'
+        ? useUserInfoStore.getState().username
+        : useCompanyInfoStore.getState().companyName,
+    address: (userType === 'user'
+      ? useUserInfoStore
+      : useCompanyInfoStore
+    ).getState().address,
+    phone: (userType === 'user'
+      ? useUserInfoStore
+      : useCompanyInfoStore
+    ).getState().phoneNumber,
+    request: '기본 메시지: 부재시 경비실에 맡겨주세요.',
+  };
+
+  const paymentAmount = {
+    subtotals: selectedOptions.map((cur: Item) => cur.price * cur.quantity), // 각 요소의 subtotal 배열
+    shipping: 3000,
+    total:
+      selectedOptions.reduce(
+        (acc: number, cur: Item) => acc + cur.price * cur.quantity,
+        0,
+      ) + 3000, // total은 subtotal의 총합 + 배송비
+  };
 
   const formatNumber = (num: number): string => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -44,21 +91,31 @@ const Ordersheet: React.FC = () => {
 
   const onclickPay = (pgValue: string, payMethod: string) => {
     (window as any).IMP.init('imp25188857');
-    const impUid = 'imp25188857';
 
     const data = {
       pg: pgValue,
       pay_method: payMethod,
       merchant_uid: generateMerchantUid(),
-      name: 'yoger test',
-      amount: 1,
+      name: 'Yoger 결제',
+      amount: paymentAmount.total,
       m_redirect_url: '/payment-confirmation',
     };
 
     (window as any).IMP.request_pay(data, async (rsp: any) => {
       if (rsp.success) {
         console.log('결제 성공');
-        naviage('/payment-confirmation');
+
+        OrderService.orderProduct(productInfo.id, selectedOptions[0].quantity)
+          .then((response) => {
+            console.log('결제 api 성공', response);
+
+            naviage('/payment-confirmation', {
+              state: { productInfo, selectedOptions, paymentAmount },
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
         console.log(rsp);
         console.log('결제 실패');
@@ -90,17 +147,21 @@ const Ordersheet: React.FC = () => {
         <OrdersheetSection>
           <SectionTitle>주문 상품</SectionTitle>
           <OrderList>
-            {orderedProduct.map((product) => (
-              <OrderItem key={product.id}>
-                <ItemImg src={product.img} alt="상품 이미지" />
-                <ItemInfoWrapper>
-                  <ItemBrand>{product.brand}</ItemBrand>
-                  <ItemName>{product.name}</ItemName>
-                  <ItemCount>기본 / {product.quantity}개</ItemCount>
-                  <ItemPrice>{priceFormatter(product.price)}원</ItemPrice>
-                </ItemInfoWrapper>
-              </OrderItem>
-            ))}
+            <OrderItem key={productInfo.id}>
+              <ItemImg src={productInfo.imageUrl} alt="상품 이미지" />
+              <ItemInfoWrapper>
+                <ItemBrand>{productInfo.creatorName}</ItemBrand>
+                <ItemName>{productInfo.name}</ItemName>
+                {selectedOptions.map((item: Item) => (
+                  <ItemCount>
+                    {item.option} / {item.quantity}개
+                  </ItemCount>
+                ))}
+                <ItemPrice>
+                  {priceFormatter(paymentAmount.subtotals[0])}원
+                </ItemPrice>
+              </ItemInfoWrapper>
+            </OrderItem>
           </OrderList>
         </OrdersheetSection>
 
@@ -257,6 +318,7 @@ const PaymentButton = styled.button`
   background-color: #8e8982;
   border: none;
 `;
+
 const keyLabels: Record<string, string> = {
   name: '이름',
   phone: '전화번호',
@@ -267,12 +329,6 @@ const keyLabels: Record<string, string> = {
   total: '총 결제 금액',
 };
 
-const addressInfo = {
-  name: '홍길동',
-  address: '서울시 강남구 테헤란로 123 10층 1001호',
-  phone: '010-1234-5678',
-  request: '부재시 경비실에 맡겨주세요.',
-};
 const orderedProduct = [
   {
     id: 1,
@@ -291,8 +347,3 @@ const orderedProduct = [
     img: ShirtProductImg,
   },
 ];
-const paymentAmount = {
-  subtotal: 40000,
-  shipping: 3000,
-  total: 43000,
-};
