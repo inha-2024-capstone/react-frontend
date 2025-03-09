@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import usePriceFormatter from '../../hooks/usePriceFormatter';
 import { ShirtProductImg, TeaProductImg } from '../../assets/home';
 import { FaRegCircleCheck } from 'react-icons/fa6';
@@ -6,6 +6,10 @@ import styled, { keyframes } from 'styled-components';
 
 const PaymentConfirm: React.FC = () => {
   const priceFormatter = usePriceFormatter();
+  const location = useLocation();
+  const productInfo = location.state?.productInfo;
+  const selectedOptions = location.state?.selectedOptions;
+  const paymentAmount = location.state?.paymentAmount;
 
   return (
     <ConfirmArticle>
@@ -14,17 +18,19 @@ const PaymentConfirm: React.FC = () => {
       <ConfirmP>결제가 승인되었습니다.</ConfirmP>
 
       <ConfirmList>
-        {orderedProduct.map((product) => (
-          <OrderItem key={product.id}>
-            <ItemImg src={product.img} alt="상품 이미지" />
-            <ItemInfoWrapper>
-              <ItemBrand>{product.brand}</ItemBrand>
-              <ItemName>{product.name}</ItemName>
-              <ItemCount>기본 / {product.quantity}개</ItemCount>
-              <ItemPrice>{priceFormatter(product.price)}원</ItemPrice>
-            </ItemInfoWrapper>
-          </OrderItem>
-        ))}
+        <OrderItem key={productInfo.id}>
+          <ItemImg src={productInfo.imageUrl} alt="상품 이미지" />
+          <ItemInfoWrapper>
+            <ItemBrand>{productInfo.creatorName}</ItemBrand>
+            <ItemName>{productInfo.name}</ItemName>
+            <ItemCount>
+              {selectedOptions[0].option} / {selectedOptions[0].quantity}개
+            </ItemCount>
+            <ItemPrice>
+              {priceFormatter(paymentAmount.subtotals[0])}원
+            </ItemPrice>
+          </ItemInfoWrapper>
+        </OrderItem>
       </ConfirmList>
 
       <ConfirmLink to="/">홈으로 돌아가기</ConfirmLink>

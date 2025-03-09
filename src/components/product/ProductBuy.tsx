@@ -5,37 +5,37 @@ import styled from 'styled-components';
 import OptionList from './OptionList';
 import { useNavigate } from 'react-router-dom';
 import { FaMinus, FaPlus, FaX } from 'react-icons/fa6';
+import { ProductDetailType } from '../../types/productTypes';
 
 interface Item {
   quantity: number;
   price: number;
-  color: string | null;
-  size: string | null;
+  option: string | null;
 }
 
-const ProductBuy: React.FC = () => {
+const ProductBuy: React.FC<{ productInfo: ProductDetailType }> = ({
+  productInfo,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const priceFormatter = usePriceFormatter();
   const navigate = useNavigate();
   const [productOptions, setProductOptions] = useState({
-    color: '',
-    size: '',
+    option: '',
   });
   const [selectedOptions, setSelectedOptions] = useState<Item[]>([]);
 
   useEffect(() => {
-    if (productOptions.color && productOptions.size) {
+    if (productOptions.option) {
       setSelectedOptions([
         ...selectedOptions,
         {
           quantity: 1,
-          price: 2000,
-          color: productOptions.color,
-          size: productOptions.size,
+          price: productInfo.priceByQuantities[0].price,
+          option: productOptions.option,
         },
       ]);
 
-      setProductOptions({ color: '', size: '' });
+      setProductOptions({ option: '' });
     }
   }, [productOptions]);
 
@@ -87,22 +87,12 @@ const ProductBuy: React.FC = () => {
 
             <OptionList
               optionName={
-                productOptions.color == '' ? '컬러' : productOptions.color
+                productOptions.option == '' ? '옵션' : productOptions.option
               }
-              options={colorOptions}
+              options={generalOptions}
               selectedOptions={[]}
               onChange={(value) => {
-                setProductOptions({ ...productOptions, color: value });
-              }}
-            />
-            <OptionList
-              optionName={
-                productOptions.size == '' ? '사이즈' : productOptions.size
-              }
-              options={sizeOptions}
-              selectedOptions={[]}
-              onChange={(value) => {
-                setProductOptions({ ...productOptions, size: value });
+                setProductOptions({ ...productOptions, option: value });
               }}
             />
           </BuyFieldset>
@@ -112,9 +102,7 @@ const ProductBuy: React.FC = () => {
             {selectedOptions.map((item, index) => (
               <BuyItem key={index}>
                 <BuyInfo>
-                  <BuyInfoText>
-                    {item.color} - {item.size}
-                  </BuyInfoText>
+                  <BuyInfoText>{item.option}</BuyInfoText>
                   <BuyRemoveBtn onClick={() => handleRemoveItem(index)}>
                     <FaX />
                   </BuyRemoveBtn>
@@ -145,7 +133,14 @@ const ProductBuy: React.FC = () => {
 
           {/* 구매하기 버튼 */}
           <BuyBtns>
-            <BuyBtn $type="submit" onClick={() => navigate('/ordersheet')}>
+            <BuyBtn
+              $type="submit"
+              onClick={() =>
+                navigate('/ordersheet', {
+                  state: { productInfo, selectedOptions },
+                })
+              }
+            >
               구매하기
             </BuyBtn>
           </BuyBtns>
@@ -294,3 +289,5 @@ const sizeOptions = [
   { value: 'M', label: 'M' },
   { value: 'L', label: 'L' },
 ];
+
+const generalOptions = [{ value: '일반', label: 'general' }];
