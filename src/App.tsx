@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -6,7 +6,12 @@ import {
   Navigate,
   useNavigate,
 } from 'react-router-dom';
-import { useAuthStore } from './store/store';
+import {
+  useAuthStore,
+  useCompanyInfoStore,
+  useUserInfoStore,
+  useUserTypeStore,
+} from './store/store';
 import {
   LoginPage,
   SignUpPage,
@@ -26,6 +31,72 @@ import UserService from './services/UserService';
 
 const App: React.FC = () => {
   const isAuth = useAuthStore((state) => state.isAuth);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [userType, setUserType] = useState<string>(
+    useUserTypeStore.getState().userType,
+  );
+
+  useEffect(() => {
+    if (
+      useUserInfoStore.getState().nickName === '' &&
+      useCompanyInfoStore.getState().companyName === ''
+    ) {
+      setIsLoaded(true);
+
+      if (useUserTypeStore.getState().userType === 'user') {
+        UserService.getAuthInfo()
+          .then((response) => {
+            if (response.isSucceeded === false) {
+              alert('유저 정보를 가져오는데 실패했습니다.');
+              return;
+            }
+            useUserInfoStore.getState().setUserInfo(response.result);
+            setIsLoaded(false);
+          })
+          .catch((error) => {
+            useUserTypeStore.getState().setUserType('company');
+            setUserType('company');
+
+            UserService.getCompanyAuthInfo()
+              .then((response) => {
+                if (response.isSucceeded === false) {
+                  alert('유저 정보를 가져오는데 실패했습니다.');
+                  return;
+                }
+                useCompanyInfoStore.getState().setCompanyInfo(response.result);
+                setIsLoaded(false);
+              })
+              .catch((error) => {
+                useUserTypeStore.getState().setUserType('user');
+                setUserType('user');
+              });
+          });
+      } else {
+        UserService.getCompanyAuthInfo()
+          .then((response) => {
+            if (response.isSucceeded === false) {
+              alert('유저 정보를 가져오는데 실패했습니다.');
+              return;
+            }
+            useCompanyInfoStore.getState().setCompanyInfo(response.result);
+            setIsLoaded(false);
+          })
+          .catch((error) => {
+            useUserTypeStore.getState().setUserType('user');
+            setUserType('user');
+
+            UserService.getAuthInfo().then((response) => {
+              if (response.isSucceeded === false) {
+                alert('유저 정보를 가져오는데 실패했습니다.');
+                return;
+              }
+              useUserInfoStore.getState().setUserInfo(response.result);
+              setIsLoaded(false);
+            });
+          });
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const accessToken = localStorage.getItem('yogerAccessToken');
@@ -39,7 +110,6 @@ const App: React.FC = () => {
             useAuthStore.getState().logout();
             return;
           }
-          console.log('refresh token');
           useAuthStore
             .getState()
             .login(response.accessToken, response.refreshToken);
