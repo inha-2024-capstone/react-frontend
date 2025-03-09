@@ -5,7 +5,6 @@ import ProductService from '../../services/ProductService';
 import usePriceFormatter from '../../hooks/usePriceFormatter';
 import { ProductDetailType } from '../../types/productTypes';
 import { useUserTypeStore } from '../../store/store';
-import PriceOffer from './PriceOffer';
 import ProductBuy from './ProductBuy';
 import { RecImg } from '../../assets/common';
 import styled from 'styled-components';
@@ -81,7 +80,7 @@ const Product: React.FC = () => {
       </ProductArticle>
 
       {/* 구매하기 버튼 */}
-      {userType === 'user' ? <ProductBuy /> : <PriceOffer />}
+      <ProductBuy productInfo={productInfo} />
     </ProductContainer>
   );
 };
